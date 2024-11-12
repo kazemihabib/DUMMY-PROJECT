@@ -1,4 +1,4 @@
-# .github/workflows/run-solvers.yml
+# .github/workflows/just_SMT.yml
 
 name: Run SMT Solvers
 

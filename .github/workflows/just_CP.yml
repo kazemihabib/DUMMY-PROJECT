@@ -1,4 +1,4 @@
-# .github/workflows/run-solvers.yml
+# .github/workflows/just_CP.yml
 
 name: Run CP Solvers
 
