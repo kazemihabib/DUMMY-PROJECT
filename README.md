@@ -92,6 +92,9 @@ This will solve all instances in the input directory using *CP*, *SMT* and *MIP*
 ```bash
 python3 multi_solver.py Instances/ res/
 ```
+### Running the CP solver
+
+TODO
 
 ### Running the SMT Solver
 
@@ -129,3 +132,7 @@ To run the SMT Solver with and without symmetry breaking:
 python3 SMT/SMT_Z3.py Instances res/SMT both
 ```
 
+
+### Running the MIP solver
+
+TODO
