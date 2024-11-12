@@ -1,0 +1,30 @@
+# .github/workflows/just_MIP.yml
+
+name: Run CP Solvers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build Docker image
+        run: docker build -t cdmo .
+        
+      - name: Create output directory
+        run: mkdir -p res
+        
+      - name: Run solvers in Docker
+        run: |
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u -c "print('TODO')"
+
+          
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: solver-results
+          path: res/
+          retention-days: 30
