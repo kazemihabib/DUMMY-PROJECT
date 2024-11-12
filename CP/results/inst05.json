@@ -1,0 +1,44 @@
+{
+    "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
+        "total_time": 0.23,
+        "solve_time": 0.0003433,
+        "optimal": true,
+        "obj": 206,
+        "sol": "[2], [1, 3]"
+    },
+    "gecode_CP_SYM_LB": {
+        "total_time": 0.21,
+        "solve_time": 0.0004931,
+        "optimal": true,
+        "obj": 206,
+        "sol": "[2], [1, 3]"
+    },
+    "gecode_CP": {
+        "total_time": 0.22,
+        "solve_time": 0.0005516,
+        "optimal": true,
+        "obj": 206,
+        "sol": "[2], [1, 3]"
+    },
+    "chuffed_CP_SYM_LB_RML_HRSTIC_CHUFFED": {
+        "total_time": 0.21,
+        "solve_time": 0.0,
+        "optimal": true,
+        "obj": 206,
+        "sol": "[2], [1, 3]"
+    },
+    "chuffed_CP_SYM_LB": {
+        "total_time": 0.27,
+        "solve_time": 0.001,
+        "optimal": true,
+        "obj": 206,
+        "sol": "[2], [1, 3]"
+    },
+    "chuffed_CP": {
+        "total_time": 0.24,
+        "solve_time": 0.0,
+        "optimal": true,
+        "obj": 206,
+        "sol": "[2], [1, 3]"
+    }
+}
