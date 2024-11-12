@@ -19,8 +19,8 @@ jobs:
         
       - name: Run solvers in Docker
         run: |
-          docker run -v ${{ github.workspace }}/res:/app/res cdmo \
-                    bash -c "source venv/bin/activate && python multi_solver.py /app/Instances /app/res"
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u multi_solver.py /app/Instances /app/res
+
           
       - name: Upload results
         uses: actions/upload-artifact@v3
