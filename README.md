@@ -58,14 +58,6 @@ docker run -it --rm -v ~/docker_generated_files/res:/app/res cdmo
 
 Now, you have a prompt ready to run the solvers.
 
-## Activating the Virtual Environment
-
-Before running the solvers, activate the virtual environment by executing:
-
-```bash
-source venv/bin/activate
-```
-
 ## Running Solvers
 
 ### Running All Solvers

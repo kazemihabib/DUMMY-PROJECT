@@ -12,14 +12,17 @@ RUN apt-get clean && \
 # Create a virtual environment in /app/venv
 RUN python3 -m venv /app/venv
 
+# Set the virtual environment path in the environment
+ENV PATH="/app/venv/bin:$PATH"
+
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy local files to the container
 COPY . /app
 
-# Activate the virtual environment and install dependencies
-RUN . /app/venv/bin/activate && pip install -r /app/requirements.txt
+# Install dependencies
+RUN pip install -r /app/requirements.txt
 
 # Default command: Open a bash shell (can be changed as needed)
 CMD ["bash"]
