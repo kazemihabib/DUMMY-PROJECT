@@ -11,22 +11,21 @@ class MCPSolver:
     """
     MCPSolver is a class that solves the Multiple Couriers Planning (MCP) problem using the Z3 SMT solver.
     Attributes:
-        debug (bool): A flag for enabling debug mode.
+        verbose (int): 0 = Quiet/Silent (minimal output) | 1 = Basic information (default level) | 2 = Detailed debug information
         num_couriers (int): The number of couriers.
         num_items (int): The number of items.
         courier_capacities (List[int]): A list of capacities for each courier.
         items_sizes (List[int]): A list of sizes of each item.
         distances_matrix (List[List[int]]): A matrix representing distances between nodes
     """
-    def __init__(self, instance_file: str, debug: bool = False):
+    def __init__(self, instance_file: str, verbose: int = 1):
 
-        self.debug = debug
         self.num_couriers: int = 0
         self.num_items: int = 0
         self.courier_capacities: List[int] = [] 
         self.items_sizes: List[int]  = [] 
         self.distances_matrix: List[List[int]] = [] 
-        self._debug = debug
+        self._verbose = verbose
         self._load_instance(instance_file)
         
     def _load_instance(self, filename: str) -> None:
@@ -254,7 +253,7 @@ class MCPSolver:
             a list of item indices (1-based).
         """
 
-        if self._debug == True:
+        if self._verbose == 2:
             for i in range(max(len(assignments[j]) for j in range(self.num_couriers))):
                 for j in range(self.num_couriers):
                     if ( i < len(assignments[j])):
@@ -295,7 +294,21 @@ class MCPSolver:
         with open(output_file, 'w') as f:
             json.dump(data, f, indent=2)
 
-def solve(input_dir: str, output_dir: str, symmetry_breaking: str, debug = True) -> None:
+def solve(input_dir: str, output_dir: str, symmetry_breaking: str, verbose:int = 1) -> None:
+    """
+    Solves the problem instances located in the input directory and saves the solutions in the output directory.
+    Parameters:
+    input_dir (str): The directory containing the input files with '.dat' extension.
+    output_dir (str): The directory where the output files will be saved.
+    symmetry_breaking (str): Specifies whether to use symmetry breaking. 
+                             Acceptable values are "both", "sb" (with symmetry breaking), and "nosb" (without symmetry breaking).
+    verbose (int, optional): The verbosity level.
+        0 = Quiet/Silent (minimal output)
+        1 = Basic information (default level)
+        2 = Detailed debug information
+
+    Returns: None
+    """
     os.makedirs(output_dir, exist_ok=True)
      
     for filename in sorted(os.listdir(input_dir)):
@@ -304,18 +317,22 @@ def solve(input_dir: str, output_dir: str, symmetry_breaking: str, debug = True)
             output_filename = os.path.splitext(filename)[0] + '.json'
             output_file = os.path.join(output_dir, output_filename)
             
-            solver = MCPSolver(input_file, debug=debug)
+            solver = MCPSolver(input_file, verbose=verbose)
             if symmetry_breaking in ["both", "sb"]:
                 print(f"Solving {filename} with symmetry breaking")
                 solution = solver.solve(timeout = 300, symmetry_breaking = True)
+                if verbose == 1:
+                    print(solution)
                 solver.save_solution(solution, "Z3_SB", output_file)
             if symmetry_breaking in ["both", "nosb"]:
                 print(f"Solving {filename} without symmetry breaking")
                 solution = solver.solve(timeout = 300, symmetry_breaking = False)
+                if verbose == 1:
+                    print(solution)
                 solver.save_solution(solution, "Z3_NO_SB", output_file)
 
 if __name__ == "__main__":
-    debug = True
+    verbose = True
 
     if len(sys.argv) != 4:
         usage_message = (
