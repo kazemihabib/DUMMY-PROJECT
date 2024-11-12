@@ -295,6 +295,25 @@ class MCPSolver:
         with open(output_file, 'w') as f:
             json.dump(data, f, indent=2)
 
+def solve(input_dir: str, output_dir: str, symmetry_breaking: str, debug = True) -> None:
+    os.makedirs(output_dir, exist_ok=True)
+     
+    for filename in sorted(os.listdir(input_dir)):
+        if filename.endswith('.dat'):
+            input_file = os.path.join(input_dir, filename)
+            output_filename = os.path.splitext(filename)[0] + '.json'
+            output_file = os.path.join(output_dir, output_filename)
+            
+            solver = MCPSolver(input_file, debug=debug)
+            if symmetry_breaking in ["both", "sb"]:
+                print(f"Solving {filename} with symmetry breaking")
+                solution = solver.solve(timeout = 300, symmetry_breaking = True)
+                solver.save_solution(solution, "Z3_SB", output_file)
+            if symmetry_breaking in ["both", "nosb"]:
+                print(f"Solving {filename} without symmetry breaking")
+                solution = solver.solve(timeout = 300, symmetry_breaking = False)
+                solver.save_solution(solution, "Z3_NO_SB", output_file)
+
 if __name__ == "__main__":
     debug = True
 
@@ -323,21 +342,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     symmetry_breaking = sys.argv[3]
+
+    solve(input_dir, output_dir, symmetry_breaking)
         
-    os.makedirs(output_dir, exist_ok=True)
-     
-    for filename in sorted(os.listdir(input_dir)):
-        if filename.endswith('.dat'):
-            input_file = os.path.join(input_dir, filename)
-            output_filename = os.path.splitext(filename)[0] + '.json'
-            output_file = os.path.join(output_dir, output_filename)
-            
-            solver = MCPSolver(input_file, debug=debug)
-            if symmetry_breaking in ["both", "sb"]:
-                print(f"Solving {filename} with symmetry breaking")
-                solution = solver.solve(timeout = 300, symmetry_breaking = True)
-                solver.save_solution(solution, "Z3_SB", output_file)
-            if symmetry_breaking in ["both", "nosb"]:
-                print(f"Solving {filename} without symmetry breaking")
-                solution = solver.solve(timeout = 300, symmetry_breaking = False)
-                solver.save_solution(solution, "Z3_NO_SB", output_file)

@@ -1,5 +1,6 @@
 import sys
 import os
+import SMT.SMT_Z3 as SMT_solver
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
@@ -27,7 +28,7 @@ if __name__ == "__main__":
     # Run SMT solver using command line
     print("Running SMT")
     try:
-        os.system(f"python3 SMT/SMT_Z3.py {input_directory} {output_directory}/SMT both")
+        SMT_solver.solve(input_directory, output_directory, "both")
     except Exception as e:
         print(f"An error occurred while running the SMT solver: {e}")
 
