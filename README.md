@@ -112,6 +112,24 @@ Arguments:
   - `sb`: Enable symmetry breaking.
   - `nosb`: Disable symmetry breaking.
 
+
+### Running the CP Solver
+
+To run the CP solver:
+
+```bash
+python CP/run_cp.py <input_directory> <output_directory>
+```
+
+Arguments:
+- `<input_directory>`: Directory containing the instance files.
+- `<output_directory>`: Directory to save the solutions as JSON files.
+
+The script will run three different minizinc solvers using each "chuffed" or "gecode". The solvers include:
+- `CP_SYM_LB_RML_HRSTIC`: Uses Symmetry-breaking, Lower-bound constraint, Route Matrix Limiting and non-trivial Heuristics.
+- `CP_SYM_LB`: Uses only Symmetry-breaking and Lower-bound constraint.
+- `CP`: The simplest solver without Symmetry-breaking or LB constraint. 
+
 ## Examples
 
 To run the SMT Solver with symmetry breaking enabled:
