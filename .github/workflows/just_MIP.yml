@@ -1,6 +1,6 @@
 # .github/workflows/just_MIP.yml
 
-name: Run CP Solvers
+name: Run MIP Solvers
 
 on:
   workflow_dispatch:
