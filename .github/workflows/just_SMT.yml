@@ -1,6 +1,6 @@
 # .github/workflows/run-solvers.yml
 
-name: Run All Solvers
+name: Run SMT Solvers
 
 on:
   workflow_dispatch:
