@@ -1,5 +1,5 @@
 # Use the official MiniZinc image as a base
-FROM minizinc/minizinc
+FROM minizinc/minizinc:2.8.7-jammy
 
 # Install Python
 RUN apt-get update && \
