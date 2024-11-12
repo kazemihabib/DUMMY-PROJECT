@@ -1,0 +1,44 @@
+{
+    "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
+        "total_time": 0.96,
+        "solve_time": 0.718287,
+        "optimal": true,
+        "obj": 226,
+        "sol": "[1, 4], [2, 3], [5, 7], [6], [8], [9]"
+    },
+    "gecode_CP_SYM_LB": {
+        "total_time": 5.8,
+        "solve_time": 5.42731,
+        "optimal": true,
+        "obj": 226,
+        "sol": "[1, 4], [2, 3], [5, 7], [6], [8], [9]"
+    },
+    "gecode_CP": {
+        "total_time": 206.88,
+        "solve_time": 206.538,
+        "optimal": true,
+        "obj": 226,
+        "sol": "[1, 4], [2, 3], [5, 7], [6, 8], [9]"
+    },
+    "chuffed_CP_SYM_LB_RML_HRSTIC_CHUFFED": {
+        "total_time": 0.31,
+        "solve_time": 0.016,
+        "optimal": true,
+        "obj": 226,
+        "sol": "[8, 6], [1], [2, 3], [9], [7, 5], [4]"
+    },
+    "chuffed_CP_SYM_LB": {
+        "total_time": 3.15,
+        "solve_time": 2.68,
+        "optimal": true,
+        "obj": 226,
+        "sol": "[1, 4], [2, 7], [5, 9], [3], [6], [8]"
+    },
+    "chuffed_CP": {
+        "total_time": 7.01,
+        "solve_time": 6.545,
+        "optimal": true,
+        "obj": 226,
+        "sol": "[1, 4], [2, 3], [5, 7], [6, 8], [9]"
+    }
+}
