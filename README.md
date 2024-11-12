@@ -85,7 +85,7 @@ python multi_solver.py <input_directory> <output_directory>
 - `<input_directory>`: Directory containing the instance files.
 - `<output_directory>`: Directory where the solutions will be saved as JSON files.
 
-This will process all instances in the input directory and save the results in the output directory.
+This will solve all instances in the input directory using *CP*, *SMT* and *MIP* and save the results in the output directory.
 
 **Example**:
 
