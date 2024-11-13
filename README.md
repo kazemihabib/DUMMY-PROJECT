@@ -2,9 +2,11 @@
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
-- [Building Docker Image](#building-docker-image)
-- [Running Docker Image](#running-docker-image)
-- [Running Solvers](#running-solvers)
+- [Quick Start Guide (TL;DR)](#quick-start-guide-tldr)
+- [Detailed Setup and Usage](#detailed-setup-and-usage)
+  - [Building Docker Image](#building-docker-image)
+  - [Running Docker Image](#running-docker-image)
+  - [Running Solvers](#running-solvers)
     - [Running All Solvers](#running-all-solvers)
     - [Running the SMT Solver](#running-the-smt-solver)
     - [Running the CP Solver](#running-the-cp-solver)
@@ -18,7 +20,50 @@ Before you begin, ensure that you have the following installed:
 - **Python**: Version 3.6 or higher is required. We recommend using Python 3.10, as this is the version we tested.
 - **pip**: Python's package installer.
 
-## Building Docker Image
+
+---
+
+## Quick Start Guide (TL;DR)
+
+1. **Open your terminal and navigate to the root of this project**.
+
+2. **Build Docker Image**:  
+
+    ```bash
+    docker build -t cdmo .
+    ```
+
+3. **Run Docker**:
+
+    ```bash
+    docker run -it --rm cdmo
+    ```
+
+    This command will launch the Docker container and open a shell session inside it, allowing you to run commands directly within the container environment.
+
+4. **Run All Solvers**:
+
+    ```bash
+    python multi_solver.py res/
+    ```
+5. **Check correctness of found soloutions**
+    ```bash
+    python check_solution.py Instances/ res/
+    ```
+6. **Access soloutions**
+    ```bash
+    cd /app/res
+    ```
+
+For more specific instructions on setting up and running individual solvers or using additional options, see [Detailed Setup and Usage](#detailed-setup-and-usage)
+
+## Detailed Setup and Usage
+
+
+
+
+
+### Building Docker Image
 
 To build the Docker image:
 
@@ -32,7 +77,7 @@ To build the Docker image:
 
    This will create an image named `cdmo`.
 
-## Running Docker Image
+### Running Docker Image
 
 To run the Docker image, execute the following command:
 
@@ -72,9 +117,9 @@ docker run -it --rm -v $(pwd)/docker_generated_files/res:/app/res -v $(pwd)/new_
 
 Now, you have a prompt ready to run the solvers.
 
-## Running Solvers
+### Running Solvers
 
-### Running All Solvers
+#### Running All Solvers
 
 To run all solvers:
 
@@ -91,7 +136,7 @@ This will solve all instances given in the assignment using *CP*, *SMT* and *MIP
 ```bash
 python3 multi_solver.py Instances/ res/
 ```
-### Running the SMT Solver
+#### Running the SMT Solver
 
 To run the SMT solver:
 
@@ -126,7 +171,7 @@ To run the SMT Solver with and without symmetry breaking:
 ```bash
 python3 SMT/SMT_Z3.py Instances res/SMT both
 ```
-### Running the CP Solver
+#### Running the CP Solver
 
 To run the CP solver:
 
@@ -144,7 +189,7 @@ The script will run three different minizinc solvers using each "chuffed" or "ge
 - `CP`: The simplest solver without Symmetry-breaking or LB constraint. 
 
 
-### Running the MIP solver
+#### Running the MIP solver
 
 To run the MIP solver:
 
