@@ -10,21 +10,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build Docker image
         run: docker build -t cdmo .
         
-      - name: Create output directory
-        run: mkdir -p res
-        
-      - name: Run solvers in Docker
+      - name: Create output directories
+        run: |
+          mkdir -p res
+          mkdir -p sys_info
+
+      - name: Capture and print system information
+        run: |
+          lscpu | tee sys_info/system_info.txt
+          free -h | tee -a sys_info/system_info.txt
+          echo "\nDisk Usage:" | tee -a sys_info/system_info.txt
+          df -h | tee -a sys_info/system_info.txt
+
+      - name: Run MIP solvers in Docker
         run: |
           docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u -c "print('TODO')"
 
-          
-      - name: Upload results
+      - name: Upload solver results
         uses: actions/upload-artifact@v3
         with:
           name: solver-results
           path: res/
           retention-days: 30
+
+      - name: Upload system information
+        uses: actions/upload-artifact@v3
+        with:
+          name: system-information
+          path: sys_info/
