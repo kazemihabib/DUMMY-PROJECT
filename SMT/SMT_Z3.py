@@ -198,7 +198,7 @@ class MCPSolver:
                 for i in range(1, couriers_max_route_length[j] - 1)]  # Skip first and last positions
             ))
         
-        # Constraint6: Calculate traveled distance for each courier
+        # Constraint6: the objective function (max_dist) should be >= to the traveled distance of each courier
         for j in range(self.num_couriers):
             solver.add(couriers_traveled_distances[j] == Sum(
                 [distances_matrix_z3(assignments[j][i], assignments[j][i+1])
@@ -206,17 +206,16 @@ class MCPSolver:
             ))
         
         
-        # Constraint7: the objective function (max_dist) should be >= to the traveled distance of each courier
         for courier in range(self.num_couriers):
             solver.add(max_dist >= couriers_traveled_distances[courier]) 
 
-        # Constraint8: Each item should be carried by only one courier and all items are delivered by checking
+        # Constraint7: Each item should be carried by only one courier and all items are delivered by checking
         # all items has been in the assignments matrix only once.
         for node in range(self.num_items):
             flattened = [assignments[j][i] == node for i in range(couriers_max_route_length[j]) for j in range(self.num_couriers)]
             solver.add(self._exactly_one(flattened))
         
-        # Constraint9: Each courier should deliver at least one item
+        # Constraint8: Each courier should deliver at least one item
         for j in range(self.num_couriers):
             solver.add(assignments[j][1] != depot) 
         
