@@ -4,13 +4,11 @@
 - [Prerequisites](#prerequisites)
 - [Building Docker Image](#building-docker-image)
 - [Running Docker Image](#running-docker-image)
-- [Activating the Virtual Environment](#activating-the-virtual-environment)
 - [Running Solvers](#running-solvers)
-  - [Running All Solvers](#running-all-solvers)
-  - [Running the SMT Solver](#running-the-smt-solver)
-  - [Running the CP Solver](#running-the-cp-solver)
-  - [Running the MIP Solver](#running-the-mip-solver)
-- [Examples](#examples)
+    - [Running All Solvers](#running-all-solvers)
+    - [Running the SMT Solver](#running-the-smt-solver)
+    - [Running the CP Solver](#running-the-cp-solver)
+    - [Running the MIP Solver](#running-the-mip-solver)
 
 ## Prerequisites
 
@@ -81,13 +79,12 @@ Now, you have a prompt ready to run the solvers.
 To run all solvers:
 
 ```bash
-python multi_solver.py <input_directory> <output_directory>
+python multi_solver.py <output_directory>
 ```
 
-- `<input_directory>`: Directory containing the instance files.
 - `<output_directory>`: Directory where the solutions will be saved as JSON files.
 
-This will solve all instances in the input directory using *CP*, *SMT* and *MIP* and save the results in the output directory.
+This will solve all instances given in the assignment using *CP*, *SMT* and *MIP* and save the results in the output directory.
 
 **Example**:
 
