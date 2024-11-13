@@ -60,7 +60,7 @@ def run_subprocess(instance_path, model, solver_type="gecode"):
 
         return output.stdout
     
-    except:
+    except Exception as e:
         print(f"Process timed out and was terminated for model {model}.")
         return None
 
@@ -90,7 +90,7 @@ def main(instances_dir, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     # solve each instance in the directory
-    for instance_file in os.listdir(instances_dir):
+    for instance_file in sorted(os.listdir(instances_dir)):
         # if os.path.basename(instance_file) in exclude_list: 
         #     continue
         if not instance_file.endswith(".dzn"):
@@ -113,7 +113,7 @@ if __name__=="__main__":
     DEBUG = 0
     # instances_dir = "instances/instances_dzn"
     # output_dir = "outputs/six_solvers"
-    solver_folder = "solvers"
+    solver_folder = os.path.join(os.path.dirname(__file__),  "solvers")
     solver = {
         "gecode":[
             "CP_SYM_LB_RML_HRSTIC_GECODE.mzn",
