@@ -1,6 +1,7 @@
 import sys
 import os
 import SMT.SMT_Z3 as SMT_solver
+import CP.run_cp as CP_solver
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
@@ -17,9 +18,8 @@ if __name__ == "__main__":
     # RUN CP    
     print("Running CP")
     try:
-        # TODO("change the following line to run the CP solver")
-        # os.system(f"python3 SMT/cp.py {input_directory} {output_directory}/CP")
-        pass
+        instances_dir = os.path.join(os.path.dirname(__file__), "CP", "instances", "instances_dzn")
+        CP_solver.main(instances_dir, f"{output_directory}/CP")
     except Exception as e:
         print(f"An error occurred while running the CP solver: {e}")
 
