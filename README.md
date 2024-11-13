@@ -149,4 +149,18 @@ The script will run three different minizinc solvers using each "chuffed" or "ge
 
 ### Running the MIP solver
 
-TODO
+To run the MIP solver:
+
+```bash
+python run.py <input_directory> <output_directory>
+```
+
+Arguments:
+- `<input_directory>`: Directory containing the instance files.
+- `<output_directory>`: Directory to save the solutions as JSON files.
+
+Solvers:
+The script supports multiple solvers, including:
+
+- `CBC` : Default solver provided by PuLP.
+- `HiGHS` : High-performance solver for linear programming.
