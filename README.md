@@ -1,6 +1,16 @@
 # CDMO
 
+This project tackles the **Multiple Couriers Planning (MCP) problem**, a complex combinatorial optimization challenge where a set of couriers must deliver items to various locations while minimizing the maximum distance any courier travels. The MCP problem, increasingly relevant in the era of online shopping and rapid delivery expectations, requires that each courier’s load capacity is respected, and routes are planned efficiently from an origin point back to the same point.
+
+The goal of this project is to model and solve the MCP problem using three approaches:
+1. **Constraint Programming (CP)**
+2. **Satisfiability Modulo Theories (SMT)**
+3. **Mixed-Integer Linear Programming (MIP)**
+
+Each model applies different optimization techniques to allocate items fairly and efficiently to couriers. The project includes experiments to evaluate solver performance across multiple instances.
+
 ## Table of Contents
+
 - [Prerequisites](#prerequisites)
 - [Quick Start Guide (TL;DR)](#quick-start-guide-tldr)
 - [Detailed Setup and Usage](#detailed-setup-and-usage)
