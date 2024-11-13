@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # Run SMT solver using command line
     print("Running SMT")
     try:
-        instances_dir = os.path.join(os.path.dirname(__file__), "Instances")
+        instances_dir = os.path.join(os.path.dirname(__file__), "instances")
         SMT_solver.solve(instances_dir, f"{output_directory}/SMT", "both")
     except Exception as e:
         print(f"An error occurred while running the SMT solver: {e}")

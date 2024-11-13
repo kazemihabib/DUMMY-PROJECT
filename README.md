@@ -58,7 +58,7 @@ Before you begin, ensure that you have the following installed:
     ```
 5. **Check correctness of found soloutions**
     ```bash
-    python check_solution.py Instances/ res/
+    python check_solution.py instances/ res/
     ```
 6. **Access soloutions**
     ```bash
@@ -144,7 +144,7 @@ This will solve all instances given in the assignment using *CP*, *SMT* and *MIP
 **Example**:
 
 ```bash
-python3 multi_solver.py Instances/ res/
+python3 multi_solver.py instances/ res/
 ```
 #### Running the SMT Solver
 
@@ -167,19 +167,19 @@ Arguments:
 To run the SMT Solver with symmetry breaking enabled:
 
 ```bash
-python3 SMT/SMT_Z3.py Instances res/SMT sb
+python3 SMT/SMT_Z3.py instances res/SMT sb
 ```
 
 To run the SMT Solver without symmetry breaking:
 
 ```bash
-python3 SMT/SMT_Z3.py Instances res/SMT nosb
+python3 SMT/SMT_Z3.py instances res/SMT nosb
 ```
 
 To run the SMT Solver with and without symmetry breaking:
 
 ```bash
-python3 SMT/SMT_Z3.py Instances res/SMT both
+python3 SMT/SMT_Z3.py instances res/SMT both
 ```
 #### Running the CP Solver
 

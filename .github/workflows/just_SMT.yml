@@ -19,7 +19,7 @@ jobs:
         
       - name: Run solvers in Docker
         run: |
-          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u SMT/SMT_Z3.py Instances/ res/SAT both
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u SMT/SMT_Z3.py instances/ res/SAT both
 
           
       - name: Upload results
