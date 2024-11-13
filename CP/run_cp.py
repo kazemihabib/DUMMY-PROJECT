@@ -109,24 +109,25 @@ def main(instances_dir, output_dir):
             save_json_output(output_json, instance_file, output_dir)
 
 
+DEBUG = 0
+solver_folder = os.path.join(os.path.dirname(__file__),  "solvers")
+solver = {
+    "gecode":[
+        "CP_SYM_LB_RML_HRSTIC_GECODE.mzn",
+        "CP_SYM_LB.mzn",
+        "CP.mzn",
+    ]
+    ,
+    "chuffed":[
+        "CP_SYM_LB_RML_HRSTIC_CHUFFED.mzn",
+        "CP_SYM_LB.mzn",
+        "CP.mzn",
+    ]
+}
+
 if __name__=="__main__":
-    DEBUG = 0
     # instances_dir = "instances/instances_dzn"
     # output_dir = "outputs/six_solvers"
-    solver_folder = os.path.join(os.path.dirname(__file__),  "solvers")
-    solver = {
-        "gecode":[
-            "CP_SYM_LB_RML_HRSTIC_GECODE.mzn",
-            "CP_SYM_LB.mzn",
-            "CP.mzn",
-        ]
-        ,
-        "chuffed":[
-            "CP_SYM_LB_RML_HRSTIC_CHUFFED.mzn",
-            "CP_SYM_LB.mzn",
-            "CP.mzn",
-        ]
-    }
 
     parser = argparse.ArgumentParser(description="run the CP solver.")
     parser.add_argument("instances_dir", help="folder containing instance files.")
