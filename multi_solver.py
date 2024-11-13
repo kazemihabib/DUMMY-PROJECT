@@ -18,16 +18,20 @@ if __name__ == "__main__":
     # RUN CP    
     print("Running CP")
     try:
-        instances_dir = os.path.join(os.path.dirname(__file__), "CP", "instances", "instances_dzn")
-        CP_solver.main(instances_dir, f"{output_directory}/CP")
+        instances_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "CP", "instances", "instances_dzn"))
+        cp_output_dir = os.path.join(output_directory, "CP")
+        os.makedirs(cp_output_dir, exist_ok=True)
+        CP_solver.main(instances_dir, cp_output_dir)
     except Exception as e:
         print(f"An error occurred while running the CP solver: {e}")
 
     # Run SMT solver using command line
     print("Running SMT")
     try:
-        instances_dir = os.path.join(os.path.dirname(__file__), "instances")
-        SMT_solver.solve(instances_dir, f"{output_directory}/SMT", "both")
+        instances_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "instances"))
+        smt_output_dir = os.path.join(output_directory, "SMT")
+        os.makedirs(smt_output_dir, exist_ok=True)
+        SMT_solver.solve(instances_dir, smt_output_dir, "both")
     except Exception as e:
         print(f"An error occurred while running the SMT solver: {e}")
 
