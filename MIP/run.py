@@ -3,6 +3,8 @@ from helper import *
 from MIP_model import *
 from math import floor,log
 import time
+import gurobipy 
+from gurobipy import GRB
 
 TIME_LIMIT = 300
 
@@ -11,6 +13,7 @@ def run(instance, time_limit = TIME_LIMIT):
     solvers = {
                 "CBC":PULP_CBC_CMD(timeLimit=time_limit),
                 "HiGHS":getSolver('HiGHS', timeLimit=time_limit,msg=False)
+                #"Gurobi": GUROBI(timeLimit=time_limit)
             }
     
     # Load instance data and define model constraints
@@ -31,6 +34,7 @@ def run(instance, time_limit = TIME_LIMIT):
     save_solution_as_json(instance,solution_data)
 
 
+if __name__ == "__main__":
+    instance = 20
+    run(instance)
 
-instance = 11
-run(instance)
