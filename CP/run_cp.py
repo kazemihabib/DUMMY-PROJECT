@@ -19,17 +19,16 @@ def parse_output_into_json(output_string):
     for match in courier_pattern.finditer(output_string):
         route = list(map(int, match.group(1).strip().split()))
         courier_routes.append(route)
-    courier_routes = str(courier_routes)
-    if courier_routes: courier_routes = courier_routes[1:len(courier_routes)-1]
+
 
     time_elapsed_match = re.search(r'% time elapsed: ([\d.]+) s', output_string)
-    time_elapsed = float(time_elapsed_match.group(1)) if time_elapsed_match else None
+    time_elapsed = int(float(time_elapsed_match.group(1))) if time_elapsed_match else None
 
     solve_time_match = re.search(r'%%%mzn-stat: solveTime=([\d.]+)', output_string)
     solve_time = float(solve_time_match.group(1)) if solve_time_match else None
 
     result = {
-        "total_time": time_elapsed,
+        "time": time_elapsed,
         "solve_time": solve_time,
         "optimal": False if time_elapsed > 300 else True,
         "obj": max_distance,
@@ -60,7 +59,7 @@ def run_subprocess(instance_path, model, solver_type="gecode"):
 
         return output.stdout
     
-    except Exception as e:
+    except:
         print(f"Process timed out and was terminated for model {model}.")
         return None
 
@@ -72,7 +71,7 @@ def solve_instance_cp(instance_path, model, solver_type, output_json):
     if output_string:
         output_json[solved_instance_name] = parse_output_into_json(output_string)
     else: #timeout
-        output_json[solved_instance_name] = {"total_time": "timeout"}
+        pass
         ...
     
     return output_json
@@ -90,7 +89,7 @@ def main(instances_dir, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     # solve each instance in the directory
-    for instance_file in sorted(os.listdir(instances_dir)):
+    for instance_file in os.listdir(instances_dir):
         # if os.path.basename(instance_file) in exclude_list: 
         #     continue
         if not instance_file.endswith(".dzn"):
@@ -115,25 +114,26 @@ solver = {
     "gecode":[
         "CP_SYM_LB_RML_HRSTIC_GECODE.mzn",
         "CP_SYM_LB.mzn",
-        "CP.mzn",
+        # "CP.mzn",
     ]
     ,
     "chuffed":[
         "CP_SYM_LB_RML_HRSTIC_CHUFFED.mzn",
-        "CP_SYM_LB.mzn",
-        "CP.mzn",
+        # "CP_SYM_LB.mzn",
+        # "CP.mzn",
     ]
 }
 
 if __name__=="__main__":
     # instances_dir = "instances/instances_dzn"
-    # output_dir = "outputs/six_solvers"
+    # output_dir = "outputs/test"
 
     parser = argparse.ArgumentParser(description="run the CP solver.")
     parser.add_argument("instances_dir", help="folder containing instance files.")
     parser.add_argument("output_dir", help="output folder to save results in json.")
     args = parser.parse_args()
+    instances_dir = args.instances_dir
+    output_dir = args.output_dir
 
-    main(args.instances_dir, args.output_dir)
+    main(instances_dir, output_dir)
 
-...

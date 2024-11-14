@@ -1,0 +1,172 @@
+{
+    "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
+        "solve_time": 0.718287,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                5,
+                7
+            ],
+            [
+                6
+            ],
+            [
+                8
+            ],
+            [
+                9
+            ]
+        ],
+        "time": 0
+    },
+    "gecode_CP_SYM_LB": {
+        "solve_time": 5.42731,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                5,
+                7
+            ],
+            [
+                6
+            ],
+            [
+                8
+            ],
+            [
+                9
+            ]
+        ],
+        "time": 5
+    },
+    "gecode_CP": {
+        "solve_time": 206.538,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                5,
+                7
+            ],
+            [
+                6,
+                8
+            ],
+            [
+                9
+            ]
+        ],
+        "time": 206
+    },
+    "chuffed_CP_SYM_LB_RML_HRSTIC_CHUFFED": {
+        "solve_time": 0.016,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                8,
+                6
+            ],
+            [
+                1
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                9
+            ],
+            [
+                7,
+                5
+            ],
+            [
+                4
+            ]
+        ],
+        "time": 0
+    },
+    "chuffed_CP_SYM_LB": {
+        "solve_time": 2.68,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                2,
+                7
+            ],
+            [
+                5,
+                9
+            ],
+            [
+                3
+            ],
+            [
+                6
+            ],
+            [
+                8
+            ]
+        ],
+        "time": 3
+    },
+    "chuffed_CP": {
+        "solve_time": 6.545,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                5,
+                7
+            ],
+            [
+                6,
+                8
+            ],
+            [
+                9
+            ]
+        ],
+        "time": 7
+    }
+}
