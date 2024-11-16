@@ -5,12 +5,14 @@ name: Run CP Solvers
 on:
   workflow_dispatch:
 
-env:
-  ACTIONS_RUNNER_DEBUG: true  # Enable debug logging
 
 jobs:
   solve:
     runs-on: ubuntu-latest
+    
+    env:
+      ACTIONS_RUNNER_DEBUG: true  # Enable debug logging
+      
     steps:
       - uses: actions/checkout@v3
 
