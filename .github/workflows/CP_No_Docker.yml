@@ -7,6 +7,8 @@ jobs:
   solve:
     runs-on: ubuntu-20.04
 
+    timeout-minutes: 720  # Set timeout to 12 hours
+
     env:
       ACTIONS_RUNNER_DEBUG: true  # Enable debug logging
 
