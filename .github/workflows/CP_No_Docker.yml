@@ -29,6 +29,7 @@ jobs:
         run: |
           wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz
           tar -xvzf MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz
+          sudo mkdir -p /opt/minizinc
           sudo mv MiniZincIDE-2.8.7-bundle-linux-x86_64/* /opt/minizinc
           sudo ln -s /opt/minizinc/bin/* /usr/local/bin/
 
