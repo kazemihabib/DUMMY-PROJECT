@@ -1,4 +1,5 @@
-z3-solver==4.13.3.0
-pulp==2.9.0
-numpy==1.26.4
 gurobipy==11.0.3
+highspy==1.8.1
+numpy==1.26.4
+PuLP==2.9.0
+z3-solver==4.13.3.0
