@@ -1,4 +1,4 @@
 z3-solver==4.13.3.0
-pulp>=2.6.0
-numpy>=1.21.0
-gurobipy>=9.0.0
+pulp==2.9.0
+numpy==1.26.4
+gurobipy==11.0.3
