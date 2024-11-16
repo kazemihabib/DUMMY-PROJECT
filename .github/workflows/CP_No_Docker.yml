@@ -1,0 +1,64 @@
+name: Run CP Solvers Without Docker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  solve:
+    runs-on: ubuntu-20.04
+
+    env:
+      ACTIONS_RUNNER_DEBUG: true  # Enable debug logging
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Python and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip python3-venv
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download and install MiniZinc
+        run: |
+          wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz
+          tar -xvzf MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz
+          sudo mv MiniZincIDE-2.8.7 /opt/minizinc
+          sudo ln -s /opt/minizinc/bin/* /usr/local/bin/
+
+      - name: Verify MiniZinc installation
+        run: minizinc --version
+
+      - name: Create output directories
+        run: |
+          mkdir -p res
+          mkdir -p sys_info
+
+      - name: Capture and print system information
+        run: |
+          lscpu | tee sys_info/system_info.txt
+          free -h | tee -a sys_info/system_info.txt
+          echo "\nDisk Usage:" | tee -a sys_info/system_info.txt
+          df -h | tee -a sys_info/system_info.txt
+
+      - name: Run CP solvers
+        run: |
+          source .venv/bin/activate
+          python -u CP/run_cp.py CP/instances/instances_dzn/ res/CP
+
+      - name: Upload solver results
+        uses: actions/upload-artifact@v3
+        with:
+          name: solver-results
+          path: res/
+          retention-days: 30
+
+      - name: Upload system information
+        uses: actions/upload-artifact@v3
+        with:
+          name: system-information
+          path: sys_info/
