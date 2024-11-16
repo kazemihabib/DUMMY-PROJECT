@@ -1,0 +1,30 @@
+{
+   "CBC": {
+      "time": 0,
+      "optimal": true,
+      "objective": 206,
+      "solution": [
+         [
+            2
+         ],
+         [
+            1,
+            3
+         ]
+      ]
+   },
+   "HiGHS": {
+      "time": 0,
+      "optimal": true,
+      "objective": 206,
+      "solution": [
+         [
+            2
+         ],
+         [
+            1,
+            3
+         ]
+      ]
+   }
+}
