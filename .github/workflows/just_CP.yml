@@ -12,7 +12,9 @@ jobs:
     
     env:
       ACTIONS_RUNNER_DEBUG: true  # Enable debug logging
-      
+    
+    timeout-minutes: 600  # Increase timeout to 10 hours
+    
     steps:
       - uses: actions/checkout@v3
 
