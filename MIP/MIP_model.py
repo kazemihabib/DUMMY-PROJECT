@@ -17,32 +17,16 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
     depot_index = num_cities+1
     
 
-    # lower_bound, nearest_city_dist = calculate_lower_bound(distance_matrix, num_couriers, num_items)
-    # upper_bound = calculate_upper_bound(num_couriers, num_items, distance_matrix)
-
-    #We define a 3d matrix of variables x[i][j][c] means that courier c has used node (i,j) to leave city i and reach city j
-    # x = LpVariable.dicts("x", (range(depot_index), range(depot_index), range(num_couriers)), cat="Binary")
-    # u = LpVariable.dicts("u", (range(num_cities), range(num_couriers)), lowBound=0, upBound = depot_index-1, cat="Integer")
-    # max_distance = LpVariable("max_dist",lowBound=nearest_city_dist, upBound=upper_bound, cat="Integer")
-    # courier_weigths = [LpVariable(name=f'weigth_{i}', lowBound=0, upBound = courier_capacity[i], cat="Integer")
-    #                for i in range(num_couriers)]
-    # courier_distance = [
-    #         LpVariable(name=f'obj_dist{i}', cat="Integer", lowBound=lower_bound,  upBound=upper_bound)
-    #         for i in range(num_couriers)]
-
-    n_cities=distance_matrix.shape[0]-1
-    origin=n_cities+1
-    n_obj = num_items // num_couriers + 1
-    min_dist = max([(distance_matrix[n_cities,i] + distance_matrix[i,n_cities]) for i in range(0,n_cities)])
-    low_cour = min([(distance_matrix[n_cities,i] + distance_matrix[i,n_cities]) for i in range(0,n_cities)])
-    upper_bound = min_dist + 2*round(log(sum([distance_matrix[i,i+1] for i in range(n_obj+1)]))) + low_cour
+    lower_bound, nearest_city_dist = calculate_lower_bound(distance_matrix, num_couriers, num_items)
+    upper_bound = calculate_upper_bound(num_couriers, num_items, distance_matrix)
+   
     x = LpVariable.dicts("x", (range(depot_index), range(depot_index), range(num_couriers)), cat="Binary")
-    u = LpVariable.dicts("u", (range(num_cities), range(num_couriers)), lowBound=0, upBound=depot_index-1, cat="Integer")
-    max_distance = LpVariable("max_dist",lowBound=min_dist, upBound=upper_bound, cat="Integer")
-    courier_weigths = [LpVariable(name=f'weigth_{i}', lowBound=0, upBound=courier_capacity[i], cat="Integer")
+    u = LpVariable.dicts("u", (range(num_cities), range(num_couriers)), lowBound=0, upBound = depot_index - 1, cat="Integer")
+    max_distance = LpVariable("max_dist",lowBound = lower_bound, upBound = upper_bound, cat="Integer")
+    courier_weigths = [LpVariable(name=f'weigth_{i}', lowBound=0, upBound = courier_capacity[i], cat="Integer")
                    for i in range(num_couriers)]
     courier_distance = [
-            LpVariable(name=f'obj_dist{i}', cat="Integer", lowBound=low_cour, upBound=upper_bound)
+            LpVariable(name=f'obj_dist{i}', cat="Integer", lowBound = nearest_city_dist, upBound = upper_bound)
             for i in range(num_couriers)]
     
     model += max_distance
@@ -71,16 +55,11 @@ def calculate_upper_bound(num_couriers, num_items, distance_matrix):
     depot_index = num_items + 1
 
     # # Compute round-trip distances using NumPy
-    # round_trip_distances = distance_matrix[num_cities, :num_cities] + distance_matrix[:num_cities, num_cities]
+    round_trip_distances = distance_matrix[num_cities, :num_cities] + distance_matrix[:num_cities, num_cities]
 
-    # max_round_trip_distance = np.max(round_trip_distances)
-    # upper_bound = num_items / num_couriers * max_round_trip_distance
-
-    n_obj = num_items // num_couriers + 1
-    min_dist = max([(distance_matrix[num_cities,i] + distance_matrix[i,num_cities]) for i in range(0,num_cities)])
-    low_cour = min([(distance_matrix[num_cities,i] + distance_matrix[i,num_cities]) for i in range(0,num_cities)])
-    upper_bound = min_dist + 2*round(log(sum([distance_matrix[i,i+1] for i in range(n_obj+1)]))) + low_cour
-
+    lower_bound = np.max(round_trip_distances)
+    max_round_trip_distance = np.max(round_trip_distances)
+    upper_bound = ( (num_items // num_couriers) * round(max_round_trip_distance) ) + lower_bound
 
     return upper_bound
 
@@ -104,7 +83,7 @@ def calculate_lower_bound(distance_matrix, num_couriers, num_items):
 
     # Find minimum round-trip distances
     nearest_city_dist = np.min(round_trip_distances)
-    lower_bound = nearest_city_dist * num_couriers  # each courier at least goes to one city and returns
+    lower_bound = np.max(round_trip_distances)  # each courier at least goes to one city and returns
     
     return lower_bound, nearest_city_dist
 

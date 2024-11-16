@@ -26,19 +26,5 @@
             3
          ]
       ]
-   },
-   "Gurobi": {
-      "time": 0,
-      "optimal": true,
-      "objective": 206,
-      "solution": [
-         [
-            2
-         ],
-         [
-            1,
-            3
-         ]
-      ]
    }
 }

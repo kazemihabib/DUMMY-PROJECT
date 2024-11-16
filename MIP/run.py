@@ -35,6 +35,6 @@ def run(instance, time_limit = TIME_LIMIT):
 
 
 if __name__ == "__main__":
-    instance = 20
+    instance = 7
     run(instance)
 
