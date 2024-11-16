@@ -1,6 +1,5 @@
 {
     "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
-        "solve_time": 300.006,
         "optimal": false,
         "obj": 286,
         "sol": [
