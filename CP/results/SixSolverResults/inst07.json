@@ -1,6 +1,5 @@
 {
     "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
-        "solve_time": 300.0,
         "optimal": false,
         "obj": 167,
         "sol": [
@@ -37,7 +36,6 @@
         "time": 300
     },
     "gecode_CP_SYM_LB": {
-        "solve_time": 300.001,
         "optimal": false,
         "obj": 167,
         "sol": [
@@ -74,7 +72,6 @@
         "time": 300
     },
     "gecode_CP": {
-        "solve_time": 300.001,
         "optimal": false,
         "obj": 167,
         "sol": [
@@ -111,7 +108,6 @@
         "time": 300
     },
     "chuffed_CP_SYM_LB_RML_HRSTIC_CHUFFED": {
-        "solve_time": 4.891,
         "optimal": true,
         "obj": 167,
         "sol": [
@@ -148,7 +144,6 @@
         "time": 5
     },
     "chuffed_CP_SYM_LB": {
-        "solve_time": 300.001,
         "optimal": false,
         "obj": 167,
         "sol": [
@@ -185,7 +180,6 @@
         "time": 300
     },
     "chuffed_CP": {
-        "solve_time": 300.001,
         "optimal": false,
         "obj": 167,
         "sol": [

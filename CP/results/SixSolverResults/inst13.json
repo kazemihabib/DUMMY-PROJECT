@@ -1,6 +1,5 @@
 {
     "gecode_CP": {
-        "solve_time": 300.015,
         "optimal": false,
         "obj": 1932,
         "sol": [

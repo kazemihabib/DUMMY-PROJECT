@@ -29,7 +29,7 @@ def parse_output_into_json(output_string):
 
     result = {
         "time": time_elapsed,
-        "solve_time": solve_time,
+        # "solve_time": solve_time,
         "optimal": False if time_elapsed > 300 else True,
         "obj": max_distance,
         "sol": courier_routes,
