@@ -216,3 +216,4 @@ The script supports multiple solvers, including:
 
 - `CBC` : Default solver provided by PuLP.
 - `HiGHS` : High-performance solver for linear programming.
+- `Gurobi` : A powerful commercial solver for linear and mixed-integer programming.
