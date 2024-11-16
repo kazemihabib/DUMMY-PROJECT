@@ -12,8 +12,8 @@ def run(instance, time_limit = TIME_LIMIT):
 
     solvers = {
                 "CBC":PULP_CBC_CMD(timeLimit=time_limit),
-                "HiGHS":getSolver('HiGHS', timeLimit=time_limit,msg=False)
-                #"Gurobi": GUROBI(timeLimit=time_limit)
+                "HiGHS":getSolver('HiGHS', timeLimit=time_limit,msg=False),
+                "Gurobi": GUROBI(timeLimit=time_limit)
             }
     
     # Load instance data and define model constraints
