@@ -1,0 +1,62 @@
+{
+   "CBC": {
+      "time": 0,
+      "optimal": true,
+      "objective": 12,
+      "solution": [
+         [
+            5,
+            4,
+            2
+         ],
+         [
+            3,
+            6
+         ],
+         [
+            1,
+            7
+         ]
+      ]
+   },
+   "HiGHS": {
+      "time": 0,
+      "optimal": true,
+      "objective": 12,
+      "solution": [
+         [
+            3,
+            6,
+            5
+         ],
+         [
+            4,
+            2
+         ],
+         [
+            7,
+            1
+         ]
+      ]
+   },
+   "Gurobi": {
+      "time": 0,
+      "optimal": true,
+      "objective": 12,
+      "solution": [
+         [
+            5,
+            4,
+            2
+         ],
+         [
+            6,
+            3
+         ],
+         [
+            1,
+            7
+         ]
+      ]
+   }
+}
