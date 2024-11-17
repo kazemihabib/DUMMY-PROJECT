@@ -2,6 +2,7 @@ import sys
 import os
 import SMT.SMT_Z3 as SMT_solver
 import CP.run_cp as CP_solver
+from MIP import run
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
@@ -38,9 +39,10 @@ if __name__ == "__main__":
     # Run MIP solver
     print("Running MIP")
     try:
-        # TODO("change the following line to run the MIP solver")
-        # os.system(f"python3 SMT/mip.py {input_directory} {output_directory}/MIP")
-        pass
+        instances_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "instances"))
+        mips_output_dir = os.path.join(output_directory, "MIP")
+        os.makedirs(mips_output_dir, exist_ok=True)
+        run.run(instances_dir, mips_output_dir)
     except Exception as e:
         print(f"An error occurred while running the MIP solver: {e}")
 
