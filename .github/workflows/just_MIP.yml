@@ -34,7 +34,7 @@ jobs:
             # Verify the license
             python -u MIP/check_gurobipy_license.py && \
             # Execute additional commands if needed
-            python -u -c \"print('TODO')\"
+            python -u MIP/run.py instances/ res/MIP
           "
 
       - name: Upload solver results
