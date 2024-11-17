@@ -8,7 +8,7 @@ def load_instance(num_instance, input_dir):
     os.chdir(script_dir)
 
     # Instantiate variables from file
-    instance_file_path = input_dir + f"inst{num_instance:02}.dat"
+    instance_file_path = os.path.join(input_dir, f"inst{num_instance:02}.dat")
 
     # Read and parse instance file
     try:
@@ -119,9 +119,11 @@ def save_solution_as_json(instance, solution_data, output_dir):
     Returns:
         None
     """
+    os.makedirs(output_dir, exist_ok=True)
+
     # Define the target directory and file path
-    parent_directory = os.path.dirname(os.getcwd())
-    file_path = os.path.join(parent_directory, "output_dir", f"{instance}.json")
+    #parent_directory = os.path.dirname(os.getcwd())
+    file_path = os.path.join(output_dir, f"{instance}.json")
 
     # Save the dictionary to a JSON file
     os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Ensure directory exists
