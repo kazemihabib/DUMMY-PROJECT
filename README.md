@@ -200,6 +200,12 @@ The script will run three different minizinc solvers using each "chuffed" or "ge
 
 
 #### Running the MIP solver
+Input file format:
+
+The instances used in this project should follow a specific naming convention:
+```bash
+inst{num_instances:02}.dat
+```
 
 To run the MIP solver:
 
