@@ -1,6 +1,11 @@
+import sys
+import os
+## Temporary solution to fix No module named 'MIP' error
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from pulp import *
-from .helper import *
-from .MIP_model import *
+from MIP.helper import *
+from MIP.MIP_model import *
 from math import floor,log
 import time
 import gurobipy 
