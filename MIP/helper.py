@@ -2,13 +2,13 @@ from pulp import *
 import numpy as np
 import os
 
-def load_instance(num_instance):
+def load_instance(num_instance, input_dir):
     """Load instance data from a file and parse it into usable variables."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(script_dir)
 
     # Instantiate variables from file
-    instance_file_path = f"instances/inst{num_instance:02}.dat"
+    instance_file_path = input_dir + f"inst{num_instance:02}.dat"
 
     # Read and parse instance file
     try:
@@ -108,7 +108,7 @@ def create_solution_json(route_decision_vars, num_cities, num_couriers, solve_ti
         "solution": solution_paths
     }
 
-def save_solution_as_json(instance, solution_data):
+def save_solution_as_json(instance, solution_data, output_dir):
     """
     Saves the given dictionary as a JSON file in the 'res/MIP' directory under the parent directory.
 
@@ -121,11 +121,16 @@ def save_solution_as_json(instance, solution_data):
     """
     # Define the target directory and file path
     parent_directory = os.path.dirname(os.getcwd())
-    file_path = os.path.join(parent_directory, "solution_paths", f"{instance}.json")
-    
+    file_path = os.path.join(parent_directory, "output_dir", f"{instance}.json")
+
     # Save the dictionary to a JSON file
     os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Ensure directory exists
     with open(file_path, 'w') as file:
         json.dump(solution_data, file, indent=3)
     
     print(f"File saved at {file_path}")
+
+
+
+
+
