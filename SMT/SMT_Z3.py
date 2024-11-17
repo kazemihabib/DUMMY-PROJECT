@@ -212,7 +212,7 @@ class MCPSolver:
         # Constraint7: Each item should be carried by only one courier and all items are delivered by checking
         # all items has been in the assignments matrix only once.
         for node in range(self.num_items):
-            flattened = [assignments[j][i] == node for i in range(couriers_max_route_length[j]) for j in range(self.num_couriers)]
+            flattened = [assignments[j][i] == node  for j in range(self.num_couriers) for i in range(couriers_max_route_length[j]) ]
             solver.add(self._exactly_one(flattened))
         
         # Constraint8: Each courier should deliver at least one item
