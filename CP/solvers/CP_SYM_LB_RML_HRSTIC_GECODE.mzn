@@ -92,7 +92,6 @@ solve :: seq_search([
                first_fail,
                indomain_random,
                complete),
-    relax_and_reconstruct([route[k,p] | k in Couriers, p in Positions], 30),
 ]) minimize max_dist;
 
 output [
