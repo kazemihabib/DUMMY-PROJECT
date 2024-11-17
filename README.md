@@ -190,7 +190,7 @@ python CP/run_cp.py <input_directory> <output_directory>
 ```
 
 Arguments:
-- `<input_directory>`: Directory containing the instance files.
+- `<input_directory>`: Directory containing the instance files, the files must be `.dzn`.
 - `<output_directory>`: Directory to save the solutions as JSON files.
 
 The script will run three different minizinc solvers using each "chuffed" or "gecode". The solvers include:

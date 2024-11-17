@@ -126,6 +126,7 @@ solver = {
 
 if __name__=="__main__":
     # instances_dir = "instances/instances_dzn"
+    # instances_dir = os.path.join(os.path.dirname(__file__), instances_dir)
     # output_dir = "outputs/test"
 
     parser = argparse.ArgumentParser(description="run the CP solver.")
