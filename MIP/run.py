@@ -1,6 +1,6 @@
 from pulp import *
-from helper import *
-from MIP_model import *
+from .helper import *
+from .MIP_model import *
 from math import floor,log
 import time
 import gurobipy 
