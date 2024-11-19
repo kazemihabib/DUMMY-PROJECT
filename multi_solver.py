@@ -21,7 +21,7 @@ if __name__ == "__main__":
     try:
         # raise Exception("CP solver is skipped")
         instances_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "instances", "instances_dzn"))
-        cp_output_dir = os.path.join(output_directory, "CP")
+        cp_output_dir = os.path.abspath(os.path.join(output_directory, "CP"))
         os.makedirs(cp_output_dir, exist_ok=True)
         CP_solver.main(instances_dir, cp_output_dir)
     except Exception as e:
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     try:
         # raise Exception("SMT solver is skipped")
         instances_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "instances", "instances_dat"))
-        smt_output_dir = os.path.join(output_directory, "SMT")
+        smt_output_dir = os.path.abspath(os.path.join(output_directory, "SMT"))
         os.makedirs(smt_output_dir, exist_ok=True)
         SMT_solver.solve(instances_dir, smt_output_dir, "both")
     except Exception as e:
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     try:
         # raise Exception("MIP solver is skipped")
         instances_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "instances", "instances_dat"))
-        mips_output_dir = os.path.join(output_directory, "MIP")
+        mips_output_dir = os.path.abspath(os.path.join(output_directory, "MIP"))
         os.makedirs(mips_output_dir, exist_ok=True)
         run.run(instances_dir, mips_output_dir)
     except Exception as e:

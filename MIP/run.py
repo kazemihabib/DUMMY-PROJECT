@@ -59,6 +59,9 @@ if __name__=="__main__":
     args = parser.parse_args()
     instances_dir = args.instances_dir
     output_dir = args.output_dir
+    # get abs path
+    instances_dir = os.path.abspath(instances_dir)
+    output_dir = os.path.abspath(output_dir)
 
     run(instances_dir, output_dir)
 
