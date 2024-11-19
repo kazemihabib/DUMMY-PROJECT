@@ -199,6 +199,12 @@ The script will run three different minizinc solvers using each "chuffed" or "ge
 - `CP_SYM_LB`: Uses only Symmetry-breaking and Lower-bound constraint.
 - `CP`: The simplest solver without Symmetry-breaking or LB constraint. 
 
+**Example**
+
+```bash
+python3 CP/run_cp.py instances/instances_dzn res/CP
+```
+
 
 #### Running the MIP solver
 
@@ -218,3 +224,9 @@ The script supports multiple solvers, including:
 - `CBC` : Default solver provided by PuLP.
 - `HiGHS` : High-performance solver for linear programming.
 - `Gurobi` : A powerful commercial solver for linear and mixed-integer programming.
+
+**Example**
+
+```bash
+python3 MIP/run.py instances/instances_dat res/MIP
+```
