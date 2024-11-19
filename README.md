@@ -155,7 +155,8 @@ python SMT/SMT_Z3.py <input_directory> <output_directory> <sb|nosb|both>
 ```
 
 Arguments:
-- `<input_directory>`: Directory containing the instance files.
+
+- `<input_directory>`: Directory containing the instance files. The files must be `.dat`.
 - `<output_directory>`: Directory to save the solutions as JSON files.
 - `<sb|nosb|both>`: Symmetry breaking options:
   - `both`: Run both with and without symmetry breaking.
@@ -200,12 +201,6 @@ The script will run three different minizinc solvers using each "chuffed" or "ge
 
 
 #### Running the MIP solver
-Input file format:
-
-The instances used in this project should follow a specific naming convention:
-```bash
-inst{num_instances:02}.dat
-```
 
 To run the MIP solver:
 
@@ -214,7 +209,7 @@ python run.py <input_directory> <output_directory>
 ```
 
 Arguments:
-- `<input_directory>`: Directory containing the instance files.
+- `<input_directory>`: Directory containing the instance files. The files should follow `inst{num_instances:02}.dat` naming. convention
 - `<output_directory>`: Directory to save the solutions as JSON files.
 
 Solvers:
