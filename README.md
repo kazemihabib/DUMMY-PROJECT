@@ -58,7 +58,7 @@ Before you begin, ensure that you have the following installed:
     ```
 5. **Check correctness of found soloutions**
     ```bash
-    python check_solution.py instances/ res/
+    python check_solution.py instances/instances_dat res/
     ```
 6. **Access soloutions**
     ```bash
@@ -144,7 +144,7 @@ This will solve all instances given in the assignment using *CP*, *SMT* and *MIP
 **Example**:
 
 ```bash
-python multi_solver.py instances/ res/
+python multi_solver.py res/
 ```
 #### Running the SMT Solver
 
