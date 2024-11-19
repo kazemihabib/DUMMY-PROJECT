@@ -35,7 +35,7 @@ jobs:
 
       - name: Run CP solvers in Docker
         run: |
-          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u CP/run_cp.py CP/instances/instances_dzn/ res/CP
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u CP/run_cp.py instances/instances_dzn/ res/CP
 
       - name: Upload solver results
         uses: actions/upload-artifact@v3

@@ -28,7 +28,7 @@ jobs:
 
       - name: Run SMT solvers in Docker
         run: |
-          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u SMT/SMT_Z3.py instances/ res/SAT both
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u SMT/SMT_Z3.py instances/instances_dat res/SAT both
 
       - name: Upload solver results
         uses: actions/upload-artifact@v3

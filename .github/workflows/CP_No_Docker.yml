@@ -51,7 +51,7 @@ jobs:
       - name: Run CP solvers
         run: |
           source .venv/bin/activate
-          python -u CP/run_cp.py CP/instances/instances_dzn/ res/CP
+          python -u CP/run_cp.py instances/instances_dzn/ res/CP
 
       - name: Upload solver results
         uses: actions/upload-artifact@v3
