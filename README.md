@@ -144,7 +144,7 @@ This will solve all instances given in the assignment using *CP*, *SMT* and *MIP
 **Example**:
 
 ```bash
-python3 multi_solver.py instances/ res/
+python multi_solver.py instances/ res/
 ```
 #### Running the SMT Solver
 
@@ -168,19 +168,19 @@ Arguments:
 To run the SMT Solver with symmetry breaking enabled:
 
 ```bash
-python3 SMT/SMT_Z3.py instances/instances_dat res/SMT sb
+python SMT/SMT_Z3.py instances/instances_dat res/SMT sb
 ```
 
 To run the SMT Solver without symmetry breaking:
 
 ```bash
-python3 SMT/SMT_Z3.py instances/instances_dat res/SMT nosb 
+python SMT/SMT_Z3.py instances/instances_dat res/SMT nosb 
 ```
 
 To run the SMT Solver with and without symmetry breaking:
 
 ```bash
-python3 SMT/SMT_Z3.py instances/instances_dat res/SMT both
+python SMT/SMT_Z3.py instances/instances_dat res/SMT both
 ```
 #### Running the CP Solver
 
@@ -202,7 +202,7 @@ The script will run three different minizinc solvers using each "chuffed" or "ge
 **Example**
 
 ```bash
-python3 CP/run_cp.py instances/instances_dzn res/CP
+python CP/run_cp.py instances/instances_dzn res/CP
 ```
 
 
@@ -228,5 +228,5 @@ The script supports multiple solvers, including:
 **Example**
 
 ```bash
-python3 MIP/run.py instances/instances_dat res/MIP
+python MIP/run.py instances/instances_dat res/MIP
 ```
