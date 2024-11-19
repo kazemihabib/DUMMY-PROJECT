@@ -168,19 +168,19 @@ Arguments:
 To run the SMT Solver with symmetry breaking enabled:
 
 ```bash
-python3 SMT/SMT_Z3.py instances res/SMT sb
+python3 SMT/SMT_Z3.py instances/instances_dat res/SMT sb
 ```
 
 To run the SMT Solver without symmetry breaking:
 
 ```bash
-python3 SMT/SMT_Z3.py instances res/SMT nosb
+python3 SMT/SMT_Z3.py instances/instances_dat res/SMT nosb 
 ```
 
 To run the SMT Solver with and without symmetry breaking:
 
 ```bash
-python3 SMT/SMT_Z3.py instances res/SMT both
+python3 SMT/SMT_Z3.py instances/instances_dat res/SMT both
 ```
 #### Running the CP Solver
 
