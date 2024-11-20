@@ -27,9 +27,6 @@ Each model applies different optimization techniques to allocate items fairly an
 Before you begin, ensure that you have the following installed:
 
 - **Docker**: Install Docker on your host machine. You can download it from [Docker's official website](https://www.docker.com/get-started).
-- **Python**: Version 3.6 or higher is required. We recommend using Python 3.10, as this is the version we tested.
-- **pip**: Python's package installer.
-
 
 ---
 
