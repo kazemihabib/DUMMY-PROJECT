@@ -14,6 +14,8 @@ import argparse
 
 TIME_LIMIT = 300
 
+import time  # Import time to track execution
+
 def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
     """
     Executes the optimization process for one or multiple instances using various solvers.
@@ -47,29 +49,49 @@ def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
 
     # Loop through each instance in the specified range
     for instance in range(first_instance, last_instance):
-        # Load instance data and setup the optimization model
-        num_couriers, num_items, courier_capacity, item_sizes, distance_matrix = load_instance(instance, input_dir)
-        model, route_decision_vars, courier_distances = setup_model(
-            num_couriers, num_items, courier_capacity, item_sizes, distance_matrix
-        )
-
+        start_time = time.time()  # Start the timer
         solution_data = {}  # Store solution results for all solvers
 
-        # Solve the model using each solver
-        for solver in solvers:
-            model.solve(solvers[solver])  # Solve the model
-            status = model.status  # Check the solver status
+        try:
+            # Load instance data and setup the optimization model
+            num_couriers, num_items, courier_capacity, item_sizes, distance_matrix = load_instance(instance, input_dir)
+            model, route_decision_vars, courier_distances = setup_model(
+                num_couriers, num_items, courier_capacity, item_sizes, distance_matrix
+            )
 
-            if status == 1:  # If the solution is feasible
-                solve_time = min(time_limit, floor(model.solutionTime))  # Record the solution time
-                is_optimal = solve_time < time_limit  # Check if the solution is optimal
-                solution_data[solver] = create_solution_json(
-                    route_decision_vars, num_items + 1, num_couriers, solve_time, is_optimal, value(model.objective)
-                )
-            else:  # If no feasible solution is found
-                solution_data[solver] = create_solution_json(
-                    route_decision_vars, num_items + 1, num_couriers, 300, False, -1
-                )
+            # Solve the model using each solver
+            for solver in solvers:
+                solver_start_time = time.time()  # Solver-specific timer
+                model.solve(solvers[solver])  # Solve the model
+                solver_time_elapsed = time.time() - solver_start_time  # Calculate time elapsed for this solver
+
+                if solver_time_elapsed > time_limit:  # Check if solver exceeded time limit
+                    solution_data[solver] = create_solution_json(
+                        route_decision_vars, num_items + 1, num_couriers, time_limit, False, -1
+                    )
+                    break  # Stop the solver process for this solver
+
+                status = model.status  # Check the solver status
+
+                if status == 1:  # If the solution is feasible
+                    solve_time = min(time_limit, floor(model.solutionTime))  # Record the solution time
+                    is_optimal = solve_time < time_limit  # Check if the solution is optimal
+                    solution_data[solver] = create_solution_json(
+                        route_decision_vars, num_items + 1, num_couriers, solve_time, is_optimal, value(model.objective)
+                    )
+                else:  # If no feasible solution is found
+                    solution_data[solver] = create_solution_json(
+                        route_decision_vars, num_items + 1, num_couriers, 300, False, -1
+                    )
+
+            # Check overall runtime for the instance
+            time_elapsed = time.time() - start_time
+            if time_elapsed > time_limit:
+                raise TimeoutError("Instance exceeded time limit.")
+
+        except TimeoutError:
+            # Save an empty JSON if the instance exceeds time limit
+            solution_data = {solver: create_solution_json(None, 0, 0, time_limit, False, -1) for solver in solvers}
 
         # Save the solution data for the current instance
         save_solution_as_json(instance, solution_data, output_dir)
