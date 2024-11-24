@@ -6,6 +6,7 @@ on:
 jobs:
   solve:
     runs-on: ubuntu-latest
+    timeout-minutes: 600  # Set timeout to 10 hours
     steps:
       - uses: actions/checkout@v3
 
@@ -37,7 +38,9 @@ jobs:
             python -u MIP/run.py instances/instances_dat res/MIP
           "
 
+      # Ensure results are always uploaded, even if previous steps fail
       - name: Upload solver results
+        if: always()  # Always execute this step
         uses: actions/upload-artifact@v3
         with:
           name: solver-results
@@ -45,6 +48,7 @@ jobs:
           retention-days: 30
 
       - name: Upload system information
+        if: always()  # Always execute this step
         uses: actions/upload-artifact@v3
         with:
           name: system-information
