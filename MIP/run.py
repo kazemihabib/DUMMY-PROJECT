@@ -7,94 +7,77 @@ from pulp import *
 from MIP.helper import *
 from MIP.MIP_model import *
 from math import floor,log
-import time
+import time # Import time to track execution
+import multiprocessing
 import gurobipy 
 from gurobipy import GRB
 import argparse
 
 TIME_LIMIT = 300
 
-import time  # Import time to track execution
+def solve_model(model, solver, solution_queue):
+    """
+    Solves the given optimization model with the specified solver and places the results in a queue.
+    """
+    try:
+        model.solve(solver)
+        status = model.status
+        solution_queue.put((status, model.solutionTime, value(model.objective)))  # Send results back via the queue
+    except Exception as e:
+        solution_queue.put(("Error", str(e)))  # Handle any exceptions
 
 def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
     """
-    Executes the optimization process for one or multiple instances using various solvers.
-
-    This function loads instance data, sets up the optimization model, and solves it using multiple solvers. 
-    It saves the solution data in JSON format for each instance, detailing the results for each solver.
-
-    Parameters:
-        input_dir (str): The directory where the input instance files are stored.
-        output_dir (str): The directory where the solution files will be saved.
-        instance (int): The instance number to run. If set to 0, the function will process all instances from 1 to 21.
-        time_limit (int): The maximum time (in seconds) allowed for each solver to find a solution.
-
-    Returns:
-        None
+    Executes the optimization process for one or multiple instances using various solvers
+    with forced termination if solving exceeds the time limit.
     """
-    # Define the solvers with their respective time limits
     solvers = {
-        "CBC": PULP_CBC_CMD(timeLimit=time_limit),  # CBC solver
-        "HiGHS": getSolver('HiGHS', timeLimit=time_limit, msg=False),  # HiGHS solver
-        "Gurobi": GUROBI(timeLimit=time_limit)  # Gurobi solver
+        "CBC": PULP_CBC_CMD(timeLimit=time_limit),
+        "HiGHS": getSolver('HiGHS', timeLimit=time_limit, msg=False),
+        "Gurobi": GUROBI(timeLimit=time_limit),
     }
 
-    # Determine the range of instances to process
-    if instance == 0:  # If instance is 0, process all instances
+    if instance == 0:
         first_instance = 1
-        last_instance = 22  # Process instances from 1 to 21
-    else:  # Otherwise, process only the specified instance
+        last_instance = 22
+    else:
         first_instance = instance
         last_instance = instance + 1
 
-    # Loop through each instance in the specified range
     for instance in range(first_instance, last_instance):
-        start_time = time.time()  # Start the timer
-        solution_data = {}  # Store solution results for all solvers
+        # Load instance data and set up the model
+        num_couriers, num_items, courier_capacity, item_sizes, distance_matrix = load_instance(instance, input_dir)
+        model, route_decision_vars, courier_distances = setup_model(
+            num_couriers, num_items, courier_capacity, item_sizes, distance_matrix
+        )
 
-        try:
-            # Load instance data and setup the optimization model
-            num_couriers, num_items, courier_capacity, item_sizes, distance_matrix = load_instance(instance, input_dir)
-            model, route_decision_vars, courier_distances = setup_model(
-                num_couriers, num_items, courier_capacity, item_sizes, distance_matrix
-            )
+        solution_data = {}
 
-            # Solve the model using each solver
-            for solver in solvers:
-                solver_start_time = time.time()  # Solver-specific timer
-                model.solve(solvers[solver])  # Solve the model
-                solver_time_elapsed = time.time() - solver_start_time  # Calculate time elapsed for this solver
+        for solver_name, solver in solvers.items():
+            solution_queue = multiprocessing.Queue()  # Queue for results
+            process = multiprocessing.Process(target=solve_model, args=(model, solver, solution_queue))
+            process.start()  # Start the solver in a separate process
+            process.join(timeout=time_limit)  # Wait for the process to complete or timeout
 
-                if solver_time_elapsed > time_limit:  # Check if solver exceeded time limit
-                    solution_data[solver] = create_solution_json(
-                        route_decision_vars, num_items + 1, num_couriers, time_limit, False, -1
-                    )
-                    break  # Stop the solver process for this solver
+            if process.is_alive():
+                # Solver exceeded the time limit
+                process.terminate()  # Force terminate the solver
+                process.join()  # Ensure the process is cleaned up
+                solution_data[solver_name] = create_solution_json(None, 0, 0, time_limit, False, -1)
+            else:
+                # Solver finished within time limit
+                if not solution_queue.empty():
+                    result = solution_queue.get()  # Get the result from the queue
+                    if result[0] == 1:  # Feasible solution
+                        solve_time = min(time_limit, result[1])
+                        is_optimal = solve_time < time_limit
+                        solution_data[solver_name] = create_solution_json(
+                            route_decision_vars, num_items + 1, num_couriers, solve_time, is_optimal, result[2]
+                        )
+                    else:
+                        solution_data[solver_name] = create_solution_json(None, 0, 0, time_limit, False, -1)
 
-                status = model.status  # Check the solver status
-
-                if status == 1:  # If the solution is feasible
-                    solve_time = min(time_limit, floor(model.solutionTime))  # Record the solution time
-                    is_optimal = solve_time < time_limit  # Check if the solution is optimal
-                    solution_data[solver] = create_solution_json(
-                        route_decision_vars, num_items + 1, num_couriers, solve_time, is_optimal, value(model.objective)
-                    )
-                else:  # If no feasible solution is found
-                    solution_data[solver] = create_solution_json(
-                        route_decision_vars, num_items + 1, num_couriers, 300, False, -1
-                    )
-
-            # Check overall runtime for the instance
-            time_elapsed = time.time() - start_time
-            if time_elapsed > time_limit:
-                raise TimeoutError("Instance exceeded time limit.")
-
-        except TimeoutError:
-            # Save an empty JSON if the instance exceeds time limit
-            solution_data = {solver: create_solution_json(None, 0, 0, time_limit, False, -1) for solver in solvers}
-
-        # Save the solution data for the current instance
-        save_solution_as_json(instance, solution_data, output_dir)
+        save_solution_as_json(instance, solution_data, output_dir)  # Save results
 
 if __name__=="__main__":
 
