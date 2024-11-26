@@ -30,13 +30,13 @@ def solve_model(output_dir, model, instance, solver_name, solver, solution_data,
             solution_data[solver_name] = create_solution_json(
                 route_decision_vars, num_items + 1, num_couriers, solve_time, is_optimal, value(model.objective)
             )
-            save_solution_as_json(instance,solution_data, output_dir)
+            save_solution_as_json(instance, solution_data, solver_name, output_dir)
         else:
             solution_data[solver_name] = create_solution_json(None, 0, 0, time_limit, False, -1)
-            save_solution_as_json(instance,solution_data, output_dir)
+            save_solution_as_json(instance, solution_data, solver_name, output_dir)
     except:
         solution_data[solver_name] = create_solution_json(None, 0, 0, time_limit, False, -1)
-        save_solution_as_json(instance,solution_data, output_dir)
+        save_solution_as_json(instance, solution_data, solver_name, output_dir)
 
 def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
     """

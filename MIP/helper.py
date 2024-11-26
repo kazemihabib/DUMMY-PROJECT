@@ -154,32 +154,26 @@ def create_solution_json(route_decision_vars, num_cities, num_couriers, solve_ti
         "sol": solution_paths
     }
 
-def save_solution_as_json(instance, solution_data, output_dir):
-    """
-    Saves the given dictionary as a JSON file in the specified output directory.
+def save_solution_as_json(instance, solution_data : dict, solver_name, output_dir: str) :
 
-    Parameters:
-        instance (str): The instance identifier to be used as the JSON file name.
-        solution_data (dict): The dictionary to save as JSON.
-        output_dir (str): The directory where the JSON file will be saved.
-
-    Returns:
-        None
-    """
-    # Ensure the output directory exists
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Define the full file path
     file_path = os.path.join(output_dir, f"{instance}.json")
 
-    # Save the dictionary to a JSON file
-    with open(file_path, 'w') as file:
-        json.dump(solution_data, file, indent=3)
+    data = {}
     
-    print(f"File saved at {file_path}")
+    # Try to load existing file if it exists
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            # If file exists but isn't valid JSON, start fresh
+            pass
+                
+    # Add new solution with provided name
+    data[solver_name] = solution_data
 
-
-
-
+    # Write updated data back to file
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=3)
 
 
