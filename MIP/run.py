@@ -30,15 +30,13 @@ def solve_model(output_dir, model, instance, solver_name, solver, solution_data,
             solution_data[solver_name] = create_solution_json(
                 route_decision_vars, num_items + 1, num_couriers, solve_time, is_optimal, value(model.objective)
             )
+            save_solution_as_json(instance,solution_data, output_dir)
         else:
             solution_data[solver_name] = create_solution_json(None, 0, 0, time_limit, False, -1)
+            save_solution_as_json(instance,solution_data, output_dir)
     except:
         solution_data[solver_name] = create_solution_json(None, 0, 0, time_limit, False, -1)
-        
         save_solution_as_json(instance,solution_data, output_dir)
-
-
-
 
 def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
     """
@@ -69,15 +67,15 @@ def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
 
         solution_data = {}
         
-    for solver_name, solver in solvers.items():
-        process = multiprocessing.Process(target=solve_model, args=(output_dir, model, instance, solver_name, solver, solution_data, route_decision_vars, num_couriers, num_items))
-        process.start()  # Start the solver in a separate process
-        process.join(timeout = time_limit)  # Wait for the process to complete or timeout
+        for solver_name, solver in solvers.items():
+            process = multiprocessing.Process(target=solve_model, args=(output_dir, model, instance, solver_name, solver, solution_data, route_decision_vars, num_couriers, num_items))
+            process.start()  # Start the solver in a separate process
+            process.join(timeout = time_limit)  # Wait for the process to complete or timeout
 
-        if process.is_alive():
-            # Solver exceeded the time limit
-            process.terminate()  # Force terminate the solver
-            process.join()  # Ensure the process is cleaned up
+            if process.is_alive():
+                # Solver exceeded the time limit
+                process.terminate()  # Force terminate the solver
+                process.join()  # Ensure the process is cleaned up
 
 
 if __name__=="__main__":
