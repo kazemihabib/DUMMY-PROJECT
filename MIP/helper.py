@@ -154,7 +154,7 @@ def create_solution_json(route_decision_vars, num_cities, num_couriers, solve_ti
         "sol": solution_paths
     }
 
-def save_solution_as_json(instance, solution_data : dict, solver_name, output_dir: str) :
+def save_solution_as_json(instance, solution_data, solver_name, output_dir) :
 
     file_path = os.path.join(output_dir, f"{instance}.json")
 
@@ -174,6 +174,6 @@ def save_solution_as_json(instance, solution_data : dict, solver_name, output_di
 
     # Write updated data back to file
     with open(file_path, 'w') as f:
-        json.dump(data, f, indent=3)
+        json.dump(data, f, indent=2)
 
 
