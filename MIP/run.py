@@ -42,7 +42,7 @@ def run(input_dir, output_dir, instance=0, time_limit=TIME_LIMIT):
     solvers = {
         "CBC": PULP_CBC_CMD(timeLimit=time_limit),
         "HiGHS": getSolver('HiGHS', timeLimit=time_limit, msg=False),
-        #"Gurobi": GUROBI(timeLimit=time_limit),
+        "Gurobi": GUROBI(timeLimit=time_limit),
     }
 
     if instance == 0:
