@@ -156,6 +156,8 @@ def create_solution_json(route_decision_vars, num_cities, num_couriers, solve_ti
 
 def save_solution_as_json(instance, solution_data, solver_name, output_dir) :
 
+    os.makedirs(output_dir, exist_ok=True)
+
     file_path = os.path.join(output_dir, f"{instance}.json")
 
     data = {}
