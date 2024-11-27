@@ -59,9 +59,11 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
     num_cities = distance_matrix.shape[0] - 1  # Exclude the depot
     depot_index = num_cities + 1  # Index of the depot
 
+    # Compute round-trip distances from the depot to each city
+    round_trip_distances = distance_matrix[num_cities, :num_cities] + distance_matrix[:num_cities, num_cities]
     # Compute bounds for distances
-    lower_bound, nearest_city_dist = calculate_lower_bound(distance_matrix, num_couriers, num_items)
-    upper_bound = calculate_upper_bound(num_couriers, num_items, distance_matrix)
+    lower_bound, nearest_city_dist = calculate_lower_bound(round_trip_distances, distance_matrix, num_couriers, num_items)
+    upper_bound = calculate_upper_bound(round_trip_distances, num_couriers, num_items, distance_matrix)
 
     # Define decision variables
     x = LpVariable.dicts("x", (range(depot_index), range(depot_index), range(num_couriers)), cat="Binary")
@@ -92,7 +94,7 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
 
     return model, x, courier_distance
 
-def calculate_upper_bound(num_couriers, num_items, distance_matrix):
+def calculate_upper_bound(round_trip_distances, num_couriers, num_items, distance_matrix):
     """
     Calculates an upper bound for the maximum distance a courier might travel.
 
@@ -130,12 +132,6 @@ def calculate_upper_bound(num_couriers, num_items, distance_matrix):
         - Each courier handles approximately `5 / 3` items.
         - The upper bound is calculated based on the longest round trip and the total workload.
     """
-    num_cities = num_items  # Number of cities corresponds to the number of items
-    depot_index = num_items + 1  # The depot's index in the distance matrix
-
-    # Compute round-trip distances from the depot to each city
-    round_trip_distances = distance_matrix[num_cities, :num_cities] + distance_matrix[:num_cities, num_cities]
-
     # Calculate the longest round-trip distance (lower bound)
     lower_bound = np.max(round_trip_distances)
     max_round_trip_distance = np.max(round_trip_distances)
@@ -145,7 +141,7 @@ def calculate_upper_bound(num_couriers, num_items, distance_matrix):
 
     return upper_bound
 
-def calculate_lower_bound(distance_matrix, num_couriers, num_items):
+def calculate_lower_bound(round_trip_distances, distance_matrix, num_couriers, num_items):
     """
     Calculates a lower bound for the total travel distance and the minimum distance 
     from the depot to the nearest city.
@@ -189,13 +185,6 @@ def calculate_lower_bound(distance_matrix, num_couriers, num_items):
         - The nearest city distance is used as a reference for constraints.
 
     """
-    # Number of cities corresponds to the number of items
-    num_cities = num_items  
-    depot_index = num_items + 1  # The depot's index in the distance matrix
-
-    # Compute round-trip distances from the depot to each city
-    round_trip_distances = distance_matrix[num_cities, :num_cities] + distance_matrix[:num_cities, num_cities]
-
     # Find the nearest city's round-trip distance
     nearest_city_dist = np.min(round_trip_distances)
 
