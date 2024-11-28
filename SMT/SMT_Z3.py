@@ -13,7 +13,7 @@ class MCPSolver:
     MCPSolver is a class that solves the Multiple Couriers Planning (MCP) problem using the Z3 SMT solver.
     Attributes:
         verbose (int): 0 = Quiet/Silent (minimal output) | 1 = Basic information (default level) | 2 = Detailed debug information
-        num_couriers (int): The number of couriers.
+        m (int): The number of couriers.
         num_items (int): The number of items.
         courier_capacities (List[int]): A list of capacities for each courier.
         items_sizes (List[int]): A list of sizes of each item.
@@ -21,7 +21,7 @@ class MCPSolver:
     """
     def __init__(self, instance_file: str, verbose: int = 1):
 
-        self.num_couriers: int = 0
+        self.m: int = 0
         self.num_items: int = 0
         self.courier_capacities: List[int] = [] 
         self.items_sizes: List[int]  = [] 
@@ -42,7 +42,7 @@ class MCPSolver:
         with open(filename, 'r') as f:
             lines = f.readlines()
             
-        self.num_couriers = int(lines[0].strip())
+        self.m = int(lines[0].strip())
         self.num_items = int(lines[1].strip())
 
         self.courier_capacities = [int(x) for x in lines[2].strip().split()]
@@ -64,11 +64,11 @@ class MCPSolver:
         """
         ## TODO(Maybe we can find a good constraint to limit the max route length for each courier)
         # min_item_size = min(self.items_sizes)
-        # couriers_max_route_lengths = [0] * self.num_couriers
-        # for courier in range(self.num_couriers):
+        # couriers_max_route_lengths = [0] * self.m
+        # for courier in range(self.m):
         #     couriers_max_route_lengths[courier] = min(self.num_items, self.courier_capacities[courier] // min_item_size) + 2
         # return couriers_max_route_lengths       
-        return [math.ceil(self.num_items / self.num_couriers) + 2] * self.num_couriers
+        return [math.ceil(self.num_items / self.m) + 2] * self.m
         
     def _calculate_lower_bound(self) -> int:
         """
@@ -110,9 +110,9 @@ class MCPSolver:
         # Create matrix of courier assignments
         # My Convention: assignments[j][i] j is the column and i is the row
         assignments = [[Int(f'courier_{i}_at_{j}_node') for j in range(self._calculate_max_route_length_of_couriers()[i])] 
-                 for i in range(self.num_couriers)]
+                 for i in range(self.m)]
 
-        couriers_traveled_distances = [Int(f"courier_{c}_traveled_distance") for c in range(self.num_couriers)]
+        couriers_traveled_distances = [Int(f"courier_{c}_traveled_distance") for c in range(self.m)]
 
         # Create objective variable
         max_dist = Int('objective')
@@ -170,12 +170,12 @@ class MCPSolver:
             for j in range(self.num_items + 1):
                 solver.add(distances_matrix_z3(i, j) == self.distances_matrix[i][j])
 
-        couriers_max_route_length = [len(assignments[j]) for j in range(self.num_couriers)]
+        couriers_max_route_length = [len(assignments[j]) for j in range(self.m)]
 
         # Constraint1: First row must be depot
         # Constraint2: Last row must be depot
         # Constraint3: All other rows must be either depot or an item
-        for j in range(self.num_couriers):
+        for j in range(self.m):
             for i in range(couriers_max_route_length[j]):
                 # First row must be depot
                 # Last row must be depot
@@ -186,12 +186,12 @@ class MCPSolver:
                     solver.add(assignments[j][i] <= depot)
         
         # Constraint4: If a courier reaches the depot, it should stay there
-        for j in range(self.num_couriers):
+        for j in range(self.m):
             for i in range(1, couriers_max_route_length[j]-1):
                 solver.add(Implies(assignments[j][i] == depot, assignments[j][i + 1] == depot)) 
 
         # Constraint5: the size of items couriers carriers should be <= its capacity
-        for j in range(self.num_couriers):
+        for j in range(self.m):
             solver.add(self.courier_capacities[j] >= Sum(
                 [If(And(assignments[j][i] < depot, assignments[j][i] >= 0),
                     items_sizes_z3(assignments[j][i]),
@@ -200,24 +200,24 @@ class MCPSolver:
             ))
         
         # Constraint6: the objective function (max_dist) should be >= to the traveled distance of each courier
-        for j in range(self.num_couriers):
+        for j in range(self.m):
             solver.add(couriers_traveled_distances[j] == Sum(
                 [distances_matrix_z3(assignments[j][i], assignments[j][i+1])
                 for i in range(couriers_max_route_length[j]-1)]
             ))
         
         
-        for courier in range(self.num_couriers):
+        for courier in range(self.m):
             solver.add(max_dist >= couriers_traveled_distances[courier]) 
 
         # Constraint7: Each item should be carried by only one courier and all items are delivered by checking
         # all items has been in the assignments matrix only once.
         for node in range(self.num_items):
-            flattened = [assignments[j][i] == node  for j in range(self.num_couriers) for i in range(couriers_max_route_length[j]) ]
+            flattened = [assignments[j][i] == node  for j in range(self.m) for i in range(couriers_max_route_length[j]) ]
             solver.add(self._exactly_one(flattened))
         
         # Constraint8: Each courier should deliver at least one item
-        for j in range(self.num_couriers):
+        for j in range(self.m):
             solver.add(assignments[j][1] != depot) 
         
         
@@ -227,8 +227,8 @@ class MCPSolver:
 
         if symmetry_breaking:
             # Add lexicographical ordering for couriers with the same capacity
-            for j1 in range(self.num_couriers-1):
-                for j2 in range(j1 + 1, self.num_couriers):
+            for j1 in range(self.m-1):
+                for j2 in range(j1 + 1, self.m):
                     if self.courier_capacities[j1] == self.courier_capacities[j2]:
                         # Ensure the first item of courier i is less than that of courier j
                         solver.add(assignments[j1][1] < assignments[j2][1])
@@ -254,16 +254,16 @@ class MCPSolver:
         """
 
         if self._verbose == 2:
-            for i in range(max(len(assignments[j]) for j in range(self.num_couriers))):
-                for j in range(self.num_couriers):
+            for i in range(max(len(assignments[j]) for j in range(self.m))):
+                for j in range(self.m):
                     if ( i < len(assignments[j])):
                         number = model[assignments[j][i]].as_long()
                         print(str(number).zfill(2), end="  ")
                 print()
 
-        solution: List[List[int]] = [[] for _ in range(self.num_couriers)]
+        solution: List[List[int]] = [[] for _ in range(self.m)]
         
-        for j in range(self.num_couriers):
+        for j in range(self.m):
             # Get route excluding depot visits
             route = []
             for i in range(1, len(assignments[j])-1):
@@ -363,4 +363,3 @@ if __name__ == "__main__":
     symmetry_breaking = sys.argv[3]
 
     solve(input_dir, output_dir, symmetry_breaking)
-        
