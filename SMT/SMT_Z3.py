@@ -110,12 +110,12 @@ class MCPSolver:
         route = [[Int(f'courier_{i}_at_{j}_node') for j in range(self._calculate_max_route_length_of_couriers()[i])] 
                  for i in range(self.m)]
 
-        couriers_traveled_distances = [Int(f"courier_{c}_traveled_distance") for c in range(self.m)]
+        dist = [Int(f"courier_{c}_traveled_distance") for c in range(self.m)]
 
         # Create objective variable
         max_dist = Int('objective')
         
-        self.add_constraints(solver, route, couriers_traveled_distances, max_dist, symmetry_breaking)
+        self.add_constraints(solver, route, dist, max_dist, symmetry_breaking)
         
         solver.minimize(max_dist)
         
@@ -143,14 +143,14 @@ class MCPSolver:
                 "sol": None
             }
             
-    def add_constraints(self, solver: Optimize, route: List[List], couriers_traveled_distances: List[int], max_dist: int, symmetry_breaking) -> None:
+    def add_constraints(self, solver: Optimize, route: List[List], dist: List[int], max_dist: int, symmetry_breaking) -> None:
         """
         Adds constraints to the Z3 solver
 
         Args:
             solver (Optimize): The Z3 solver instance.
             route (List[List]): A matrix that solver will assign the items to couriers in that.
-            couriers_traveled_distances (List[int]): A list to store the traveled distances of each courier.
+            dist (List[int]): A list to store the traveled distances of each courier.
             max_dist (int): The objective variable to minimize.
         """
         depot = self.n
@@ -199,14 +199,14 @@ class MCPSolver:
         
         # Constraint6: the objective function (max_dist) should be >= to the traveled distance of each courier
         for j in range(self.m):
-            solver.add(couriers_traveled_distances[j] == Sum(
+            solver.add(dist[j] == Sum(
                 [D_z3(route[j][i], route[j][i+1])
                 for i in range(couriers_max_route_length[j]-1)]
             ))
         
         
         for courier in range(self.m):
-            solver.add(max_dist >= couriers_traveled_distances[courier]) 
+            solver.add(max_dist >= dist[courier]) 
 
         # Constraint7: Each item should be carried by only one courier and all items are delivered by checking
         # all items has been in the route matrix only once.
