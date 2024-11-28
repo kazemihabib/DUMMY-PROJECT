@@ -27,6 +27,7 @@ Each model applies different optimization techniques to allocate items fairly an
 Before you begin, ensure that you have the following installed:
 
 - **Docker**: Install Docker on your host machine. You can download it from [Docker's official website](https://www.docker.com/get-started).
+- **Internet Connection**:  `Gurobi` solver's license requires an internet connection during the usage.
 
 ---
 
