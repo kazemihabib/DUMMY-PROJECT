@@ -17,7 +17,7 @@ class MCPSolver:
         n (int): The number of items.
         l (List[int]): A list of capacities for each courier.
         s (List[int]): A list of sizes of each item.
-        distances_matrix (List[List[int]]): A matrix representing distances between nodes
+        D (List[List[int]]): A matrix representing distances between nodes
     """
     def __init__(self, instance_file: str, verbose: int = 1):
 
@@ -25,7 +25,7 @@ class MCPSolver:
         self.n: int = 0
         self.l: List[int] = [] 
         self.s: List[int]  = [] 
-        self.distances_matrix: List[List[int]] = [] 
+        self.D: List[List[int]] = [] 
         self._verbose = verbose
         self._load_instance(instance_file)
         
@@ -49,10 +49,10 @@ class MCPSolver:
         
         self.s = [int(x) for x in lines[3].strip().split()]
         
-        self.distances_matrix = []
+        self.D = []
         for i in range(self.n + 1):
             row = [int(x) for x in lines[4 + i].strip().split()]
-            self.distances_matrix.append(row)
+            self.D.append(row)
             
     def _calculate_max_route_length_of_couriers(self) -> List[int]:
         """ 
@@ -78,7 +78,7 @@ class MCPSolver:
             int: Lower bound value
         """
         depot = self.n
-        lower_bound = max(self.distances_matrix[depot][i] + self.distances_matrix[i][depot] for i in range(depot))
+        lower_bound = max(self.D[depot][i] + self.D[i][depot] for i in range(depot))
         
         return lower_bound
     
@@ -163,12 +163,12 @@ class MCPSolver:
         for idx, size in enumerate(self.s):
             solver.add(s_z3(idx) == size)
 
-        # distances_matrix_z3 is the function that maps two nodes to the distance between them
+        # D_z3 is the function that maps two nodes to the distance between them
         # it increases the performance of the solver, in defining some constraints
-        distances_matrix_z3 = Function('distances_matrix_z3', IntSort(), IntSort(), IntSort())
+        D_z3 = Function('D_z3', IntSort(), IntSort(), IntSort())
         for i in range(self.n + 1):
             for j in range(self.n + 1):
-                solver.add(distances_matrix_z3(i, j) == self.distances_matrix[i][j])
+                solver.add(D_z3(i, j) == self.D[i][j])
 
         couriers_max_route_length = [len(assignments[j]) for j in range(self.m)]
 
@@ -202,7 +202,7 @@ class MCPSolver:
         # Constraint6: the objective function (max_dist) should be >= to the traveled distance of each courier
         for j in range(self.m):
             solver.add(couriers_traveled_distances[j] == Sum(
-                [distances_matrix_z3(assignments[j][i], assignments[j][i+1])
+                [D_z3(assignments[j][i], assignments[j][i+1])
                 for i in range(couriers_max_route_length[j]-1)]
             ))
         
