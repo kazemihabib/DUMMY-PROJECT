@@ -15,7 +15,7 @@ class MCPSolver:
         verbose (int): 0 = Quiet/Silent (minimal output) | 1 = Basic information (default level) | 2 = Detailed debug information
         m (int): The number of couriers.
         n (int): The number of items.
-        courier_capacities (List[int]): A list of capacities for each courier.
+        l (List[int]): A list of capacities for each courier.
         s (List[int]): A list of sizes of each item.
         distances_matrix (List[List[int]]): A matrix representing distances between nodes
     """
@@ -23,7 +23,7 @@ class MCPSolver:
 
         self.m: int = 0
         self.n: int = 0
-        self.courier_capacities: List[int] = [] 
+        self.l: List[int] = [] 
         self.s: List[int]  = [] 
         self.distances_matrix: List[List[int]] = [] 
         self._verbose = verbose
@@ -45,7 +45,7 @@ class MCPSolver:
         self.m = int(lines[0].strip())
         self.n = int(lines[1].strip())
 
-        self.courier_capacities = [int(x) for x in lines[2].strip().split()]
+        self.l = [int(x) for x in lines[2].strip().split()]
         
         self.s = [int(x) for x in lines[3].strip().split()]
         
@@ -66,7 +66,7 @@ class MCPSolver:
         # min_item_size = min(self.s)
         # couriers_max_route_lengths = [0] * self.m
         # for courier in range(self.m):
-        #     couriers_max_route_lengths[courier] = min(self.num_items, self.courier_capacities[courier] // min_item_size) + 2
+        #     couriers_max_route_lengths[courier] = min(self.num_items, self.l[courier] // min_item_size) + 2
         # return couriers_max_route_lengths       
         return [math.ceil(self.n / self.m) + 2] * self.m
         
@@ -192,7 +192,7 @@ class MCPSolver:
 
         # Constraint5: the size of items couriers carriers should be <= its capacity
         for j in range(self.m):
-            solver.add(self.courier_capacities[j] >= Sum(
+            solver.add(self.l[j] >= Sum(
                 [If(And(assignments[j][i] < depot, assignments[j][i] >= 0),
                     s_z3(assignments[j][i]),
                     0)
@@ -229,7 +229,7 @@ class MCPSolver:
             # Add lexicographical ordering for couriers with the same capacity
             for j1 in range(self.m-1):
                 for j2 in range(j1 + 1, self.m):
-                    if self.courier_capacities[j1] == self.courier_capacities[j2]:
+                    if self.l[j1] == self.l[j2]:
                         # Ensure the first item of courier i is less than that of courier j
                         solver.add(assignments[j1][1] < assignments[j2][1])
                         break # I don't want to say A < B, A < D,  A < F, B < D, B < F, D < F. Instead I want to say A < B, B < D, D < F
