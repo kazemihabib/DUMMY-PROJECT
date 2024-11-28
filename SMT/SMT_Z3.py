@@ -5,6 +5,7 @@ import json
 import time
 import sys
 import os
+import re
 import math
 
 class MCPSolver:
@@ -313,7 +314,9 @@ def solve(input_dir: str, output_dir: str, symmetry_breaking: str, verbose:int =
     for filename in sorted(os.listdir(input_dir)):
         if filename.endswith('.dat'):
             input_file = os.path.join(input_dir, filename)
-            output_filename = os.path.splitext(filename)[0] + '.json'
+            output_filename = os.path.splitext(filename)[0]
+            output_filename_number_part = re.search(r'\d+', output_filename).group()
+            output_filename = output_filename_number_part + '.json'
             output_file = os.path.join(output_dir, output_filename)
             
             solver = MCPSolver(input_file, verbose=verbose)
