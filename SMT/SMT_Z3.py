@@ -14,7 +14,7 @@ class MCPSolver:
     Attributes:
         verbose (int): 0 = Quiet/Silent (minimal output) | 1 = Basic information (default level) | 2 = Detailed debug information
         m (int): The number of couriers.
-        num_items (int): The number of items.
+        n (int): The number of items.
         courier_capacities (List[int]): A list of capacities for each courier.
         items_sizes (List[int]): A list of sizes of each item.
         distances_matrix (List[List[int]]): A matrix representing distances between nodes
@@ -22,7 +22,7 @@ class MCPSolver:
     def __init__(self, instance_file: str, verbose: int = 1):
 
         self.m: int = 0
-        self.num_items: int = 0
+        self.n: int = 0
         self.courier_capacities: List[int] = [] 
         self.items_sizes: List[int]  = [] 
         self.distances_matrix: List[List[int]] = [] 
@@ -43,14 +43,14 @@ class MCPSolver:
             lines = f.readlines()
             
         self.m = int(lines[0].strip())
-        self.num_items = int(lines[1].strip())
+        self.n = int(lines[1].strip())
 
         self.courier_capacities = [int(x) for x in lines[2].strip().split()]
         
         self.items_sizes = [int(x) for x in lines[3].strip().split()]
         
         self.distances_matrix = []
-        for i in range(self.num_items + 1):
+        for i in range(self.n + 1):
             row = [int(x) for x in lines[4 + i].strip().split()]
             self.distances_matrix.append(row)
             
@@ -68,7 +68,7 @@ class MCPSolver:
         # for courier in range(self.m):
         #     couriers_max_route_lengths[courier] = min(self.num_items, self.courier_capacities[courier] // min_item_size) + 2
         # return couriers_max_route_lengths       
-        return [math.ceil(self.num_items / self.m) + 2] * self.m
+        return [math.ceil(self.n / self.m) + 2] * self.m
         
     def _calculate_lower_bound(self) -> int:
         """
@@ -77,7 +77,7 @@ class MCPSolver:
         Returns:
             int: Lower bound value
         """
-        depot = self.num_items
+        depot = self.n
         lower_bound = max(self.distances_matrix[depot][i] + self.distances_matrix[i][depot] for i in range(depot))
         
         return lower_bound
@@ -155,7 +155,7 @@ class MCPSolver:
             couriers_traveled_distances (List[int]): A list to store the traveled distances of each courier.
             max_dist (int): The objective variable to minimize.
         """
-        depot = self.num_items
+        depot = self.n
 
         # items_sizes_z3 is the function that maps item index to its size
         # it increases the performance of the solver, in defining some constraints
@@ -166,8 +166,8 @@ class MCPSolver:
         # distances_matrix_z3 is the function that maps two nodes to the distance between them
         # it increases the performance of the solver, in defining some constraints
         distances_matrix_z3 = Function('distances_matrix_z3', IntSort(), IntSort(), IntSort())
-        for i in range(self.num_items + 1):
-            for j in range(self.num_items + 1):
+        for i in range(self.n + 1):
+            for j in range(self.n + 1):
                 solver.add(distances_matrix_z3(i, j) == self.distances_matrix[i][j])
 
         couriers_max_route_length = [len(assignments[j]) for j in range(self.m)]
@@ -212,7 +212,7 @@ class MCPSolver:
 
         # Constraint7: Each item should be carried by only one courier and all items are delivered by checking
         # all items has been in the assignments matrix only once.
-        for node in range(self.num_items):
+        for node in range(self.n):
             flattened = [assignments[j][i] == node  for j in range(self.m) for i in range(couriers_max_route_length[j]) ]
             solver.add(self._exactly_one(flattened))
         
@@ -268,7 +268,7 @@ class MCPSolver:
             route = []
             for i in range(1, len(assignments[j])-1):
                 val = model[assignments[j][i]].as_long()
-                if val < self.num_items:  # If not depot
+                if val < self.n:  # If not depot
                     route.append(val + 1) # +1 to start from 1 instead of zero
             solution[j] = route
             
