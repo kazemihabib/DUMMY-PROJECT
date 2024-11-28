@@ -16,7 +16,7 @@ class MCPSolver:
         m (int): The number of couriers.
         n (int): The number of items.
         courier_capacities (List[int]): A list of capacities for each courier.
-        items_sizes (List[int]): A list of sizes of each item.
+        s (List[int]): A list of sizes of each item.
         distances_matrix (List[List[int]]): A matrix representing distances between nodes
     """
     def __init__(self, instance_file: str, verbose: int = 1):
@@ -24,7 +24,7 @@ class MCPSolver:
         self.m: int = 0
         self.n: int = 0
         self.courier_capacities: List[int] = [] 
-        self.items_sizes: List[int]  = [] 
+        self.s: List[int]  = [] 
         self.distances_matrix: List[List[int]] = [] 
         self._verbose = verbose
         self._load_instance(instance_file)
@@ -47,7 +47,7 @@ class MCPSolver:
 
         self.courier_capacities = [int(x) for x in lines[2].strip().split()]
         
-        self.items_sizes = [int(x) for x in lines[3].strip().split()]
+        self.s = [int(x) for x in lines[3].strip().split()]
         
         self.distances_matrix = []
         for i in range(self.n + 1):
@@ -63,7 +63,7 @@ class MCPSolver:
             List[int]: Maximum possible route length for each courier
         """
         ## TODO(Maybe we can find a good constraint to limit the max route length for each courier)
-        # min_item_size = min(self.items_sizes)
+        # min_item_size = min(self.s)
         # couriers_max_route_lengths = [0] * self.m
         # for courier in range(self.m):
         #     couriers_max_route_lengths[courier] = min(self.num_items, self.courier_capacities[courier] // min_item_size) + 2
@@ -157,11 +157,11 @@ class MCPSolver:
         """
         depot = self.n
 
-        # items_sizes_z3 is the function that maps item index to its size
+        # s_z3 is the function that maps item index to its size
         # it increases the performance of the solver, in defining some constraints
-        items_sizes_z3 = Function('items_sizes_z3', IntSort(), IntSort())
-        for idx, size in enumerate(self.items_sizes):
-            solver.add(items_sizes_z3(idx) == size)
+        s_z3 = Function('s_z3', IntSort(), IntSort())
+        for idx, size in enumerate(self.s):
+            solver.add(s_z3(idx) == size)
 
         # distances_matrix_z3 is the function that maps two nodes to the distance between them
         # it increases the performance of the solver, in defining some constraints
@@ -194,7 +194,7 @@ class MCPSolver:
         for j in range(self.m):
             solver.add(self.courier_capacities[j] >= Sum(
                 [If(And(assignments[j][i] < depot, assignments[j][i] >= 0),
-                    items_sizes_z3(assignments[j][i]),
+                    s_z3(assignments[j][i]),
                     0)
                 for i in range(1, couriers_max_route_length[j] - 1)]  # Skip first and last positions
             ))
