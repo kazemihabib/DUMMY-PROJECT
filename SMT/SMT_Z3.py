@@ -139,8 +139,8 @@ class MCPSolver:
             return {
                 "time": timeout,
                 "optimal": False,
-                "obj": "",
-                "sol": None
+                "obj": "N/A",
+                "sol": [] 
             }
             
     def add_constraints(self, solver: Optimize, route: List[List], dist: List[int], max_dist: int, symmetry_breaking) -> None:
