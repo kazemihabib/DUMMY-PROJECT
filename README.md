@@ -1,4 +1,4 @@
-# CDMO
+# Combinatorial Decision Making and Optimization (CDMO) Project
 
 This project tackles the **Multiple Couriers Planning (MCP) problem**, a complex combinatorial optimization challenge where a set of couriers must deliver items to various locations while minimizing the maximum distance any courier travels. The MCP problem, increasingly relevant in the era of online shopping and rapid delivery expectations, requires that each courier’s load capacity is respected, and routes are planned efficiently from an origin point back to the same point.
 
