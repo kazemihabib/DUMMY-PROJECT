@@ -23,13 +23,13 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
     Returns:
         tuple: A tuple containing the following:
             - model (LpProblem): The optimization model.
-            - route_decision_vars (dict): A dictionary of binary decision variables where:
-                `route_decision_vars[i][j][c]` indicates whether courier `c` travels from city `i` to city `j`.
+            - x (dict): A dictionary of binary decision variables where:
+                `x[i][j][c]` indicates whether courier `c` travels from city `i` to city `j`.
             - courier_distance (list): A list of decision variables representing the total distance traveled by each courier.
     
     Decision Variables:
-        - route_decision_vars[i][j][c]: Binary variable indicating whether courier `c` travels from city `i` to city `j`.
-        - visit_order[i][c]: Integer variable representing the visit order of courier `c` at city `i`.
+        - x[i][j][c]: Binary variable indicating whether courier `c` travels from city `i` to city `j`.
+        - u[i][c]: Integer variable representing the visit order of courier `c` at city `i`.
         - max_distance: Integer variable representing the maximum distance traveled by any courier.
         - courier_weights: Integer variables representing the total weight of items carried by each courier.
         - courier_distance: Integer variables representing the total distance traveled by each courier.
@@ -51,7 +51,7 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
         5. Add the distance computation and the objective function to the model.
 
     Returns:
-        model, route_decision_vars, courier_distance: The formulated optimization problem and decision variables.
+        model, x, courier_distance: The formulated optimization problem and decision variables.
     """
     # Create the optimization model
     model = LpProblem("Minimize_m_TSP", LpMinimize)
@@ -66,8 +66,8 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
     upper_bound = calculate_upper_bound(round_trip_distances, num_couriers, num_items, distance_matrix)
 
     # Define decision variables
-    route_decision_vars = LpVariable.dicts("route_decision_vars", (range(depot_index), range(depot_index), range(num_couriers)), cat="Binary")
-    visit_order = LpVariable.dicts("visit_order", (range(num_cities), range(num_couriers)), lowBound=0, upBound=depot_index - 1, cat="Integer")
+    x = LpVariable.dicts("x", (range(depot_index), range(depot_index), range(num_couriers)), cat="Binary")
+    u = LpVariable.dicts("u", (range(num_cities), range(num_couriers)), lowBound=0, upBound=depot_index - 1, cat="Integer")
     max_distance = LpVariable("max_dist", lowBound=lower_bound, upBound=upper_bound, cat="Integer")
     courier_weights = [
         LpVariable(name=f'weight_{i}', lowBound=0, upBound=courier_capacity[i], cat="Integer")
@@ -82,17 +82,17 @@ def setup_model(num_couriers, num_items, courier_capacity, item_size, distance_m
     model += max_distance
 
     # Apply constraints
-    set_courier_weights(model, courier_weights, route_decision_vars, item_size, num_items, num_couriers)
-    ensure_no_useless_arcs(model, route_decision_vars, depot_index, num_couriers)
-    ensure_single_visit_to_city(model, route_decision_vars, num_cities, depot_index, num_couriers)
-    ensure_departure_from_depot(model, route_decision_vars, num_cities, num_couriers)
-    ensure_return_to_depot(model, route_decision_vars, num_cities, num_couriers)
-    ensure_connected_paths(model, route_decision_vars, depot_index, num_couriers)
-    eliminate_subroutes(model, route_decision_vars, visit_order, num_cities, num_couriers)
-    set_courier_distance(model, courier_distance, route_decision_vars, distance_matrix, depot_index, num_couriers)
+    set_courier_weights(model, courier_weights, x, item_size, num_items, num_couriers)
+    ensure_no_useless_arcs(model, x, depot_index, num_couriers)
+    ensure_single_visit_to_city(model, x, num_cities, depot_index, num_couriers)
+    ensure_departure_from_depot(model, x, num_cities, num_couriers)
+    ensure_return_to_depot(model, x, num_cities, num_couriers)
+    ensure_connected_paths(model, x, depot_index, num_couriers)
+    eliminate_subroutes(model, x, u, num_cities, num_couriers)
+    set_courier_distance(model, courier_distance, x, distance_matrix, depot_index, num_couriers)
     set_maximum_distance(model, courier_distance, max_distance)
 
-    return model, route_decision_vars, courier_distance
+    return model, x, courier_distance
 
 def calculate_upper_bound(round_trip_distances, num_couriers, num_items, distance_matrix):
     """
@@ -194,72 +194,72 @@ def calculate_lower_bound(round_trip_distances, distance_matrix, num_couriers, n
     return lower_bound, nearest_city_dist
 
 # Set Weight Carried by Each Courier
-def set_courier_weights(model, courier_weigths, route_decision_vars, item_size, num_items, num_couriers):
+def set_courier_weights(model, courier_weigths, x, item_size, num_items, num_couriers):
     for c in range(num_couriers):
         # Define weight carried by each courier as sum of item sizes in their route
         terms = [
-            route_decision_vars[i][j][c] * item_size[j]
+            x[i][j][c] * item_size[j]
             for i in range(num_items + 1)
             for j in range(num_items)
         ]
         model += courier_weigths[c] == lpSum(terms)
 
 # Ensure no useless arcs (courier traveling from a city to itself)
-def ensure_no_useless_arcs(model, route_decision_vars, depot_index, num_couriers):
-    useless_arcs = sum(route_decision_vars[i][i][c] for i in range(depot_index) for c in range(num_couriers))
+def ensure_no_useless_arcs(model, x, depot_index, num_couriers):
+    useless_arcs = sum(x[i][i][c] for i in range(depot_index) for c in range(num_couriers))
     model += useless_arcs == 0
 
 # Ensure each city is visited exactly once
-def ensure_single_visit_to_city(model, route_decision_vars, num_cities, depot_index, num_couriers):
+def ensure_single_visit_to_city(model, x, num_cities, depot_index, num_couriers):
     for j in range(num_cities):
         # Sum of visit variables for city j
-        visit_sum = lpSum(route_decision_vars[i][j][c] for i in range(depot_index) for c in range(num_couriers))
+        visit_sum = lpSum(x[i][j][c] for i in range(depot_index) for c in range(num_couriers))
         model += visit_sum == 1  # Ensure the city is visited exactly once
 
 # Ensure each courier departs from the depot exactly once
-def ensure_departure_from_depot(model, route_decision_vars, num_cities, num_couriers):
+def ensure_departure_from_depot(model, x, num_cities, num_couriers):
     for c in range(num_couriers):
         # Sum of departure decisions for each courier from the depot
-        departure_sum = lpSum(route_decision_vars[num_cities][j][c] for j in range(num_cities))
+        departure_sum = lpSum(x[num_cities][j][c] for j in range(num_cities))
         model += departure_sum == 1  # Ensure the courier leaves the depot once
 
 # Ensure each courier returns to the depot exactly once
-def ensure_return_to_depot(model, route_decision_vars, num_cities, num_couriers):
+def ensure_return_to_depot(model, x, num_cities, num_couriers):
     for c in range(num_couriers):
         # Sum of return decisions for each courier to the depot
-        return_sum = lpSum(route_decision_vars[i][num_cities][c] for i in range(num_cities))
+        return_sum = lpSum(x[i][num_cities][c] for i in range(num_cities))
         model += return_sum == 1  # Ensure the courier returns to the depot once
 
 # Ensure that each city has equal inbound and outbound arcs for each courier (connected paths)
-def ensure_connected_paths(model, route_decision_vars, depot_index, num_couriers):
+def ensure_connected_paths(model, x, depot_index, num_couriers):
     for j in range(depot_index):
         for c in range(num_couriers):
             # Sum of all outbound arcs from city j for courier c
-            outgoing = lpSum(route_decision_vars[i][j][c] for i in range(depot_index))  
+            outgoing = lpSum(x[i][j][c] for i in range(depot_index))  
             
             # Sum of all inbound arcs to city j for courier c
-            incoming = lpSum(route_decision_vars[j][i][c] for i in range(depot_index))  
+            incoming = lpSum(x[j][i][c] for i in range(depot_index))  
             
             # Ensure outbound arcs equal inbound arcs for each city and courier
             model += outgoing == incoming
 
 # Eliminate subroutes by enforcing sub-tour elimination constraints
-def eliminate_subroutes(model, route_decision_vars, visit_order, num_cities, num_couriers):
+def eliminate_subroutes(model, x, u, num_cities, num_couriers):
     for c in range(num_couriers):
         for i in range(num_cities):
             for j in range(num_cities):
                 if i != j:
                     # Sub-tour elimination constraint for each courier and city pair
-                    visit_order_diff = visit_order[i][c] - visit_order[j][c]
-                    distance_term = num_cities * route_decision_vars[i][j][c]
-                    model += visit_order_diff + distance_term <= num_cities - 1
+                    u_diff = u[i][c] - u[j][c]
+                    distance_term = num_cities * x[i][j][c]
+                    model += u_diff + distance_term <= num_cities - 1
 
 # Set the total travel distance for each courier
-def set_courier_distance(model, courier_distance, route_decision_vars, distance_matrix, depot_index, num_couriers):
+def set_courier_distance(model, courier_distance, x, distance_matrix, depot_index, num_couriers):
     for c in range(num_couriers):
         # List of distance terms for courier c based on the decision variables and distance matrix
         distance_terms = [
-            route_decision_vars[i][j][c] * distance_matrix[i][j] for i in range(depot_index) for j in range(depot_index)
+            x[i][j][c] * distance_matrix[i][j] for i in range(depot_index) for j in range(depot_index)
         ]
         
         # Add constraint that the total distance equals the courier's distance variable
