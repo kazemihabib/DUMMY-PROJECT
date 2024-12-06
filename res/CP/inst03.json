@@ -1,0 +1,122 @@
+{
+    "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
+        "optimal": true,
+        "obj": 12,
+        "sol": [
+            [
+                3,
+                6,
+                5
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                1,
+                7
+            ]
+        ],
+        "time": 0
+    },
+    "gecode_CP_SYM_LB": {
+        "optimal": true,
+        "obj": 12,
+        "sol": [
+            [
+                3,
+                6,
+                5
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                1,
+                7
+            ]
+        ],
+        "time": 0
+    },
+    "gecode_CP": {
+        "optimal": true,
+        "obj": 12,
+        "sol": [
+            [
+                3,
+                6,
+                5
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                1,
+                7
+            ]
+        ],
+        "time": 0
+    },
+    "chuffed_CP_SYM_LB_RML_HRSTIC_CHUFFED": {
+        "optimal": true,
+        "obj": 12,
+        "sol": [
+            [
+                5,
+                4,
+                2
+            ],
+            [
+                7,
+                3
+            ],
+            [
+                6,
+                1
+            ]
+        ],
+        "time": 0
+    },
+    "chuffed_CP_SYM_LB": {
+        "optimal": true,
+        "obj": 12,
+        "sol": [
+            [
+                3,
+                6,
+                5
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                1,
+                7
+            ]
+        ],
+        "time": 0
+    },
+    "chuffed_CP": {
+        "optimal": true,
+        "obj": 12,
+        "sol": [
+            [
+                3,
+                6,
+                5
+            ],
+            [
+                2,
+                4
+            ],
+            [
+                1,
+                7
+            ]
+        ],
+        "time": 0
+    }
+}

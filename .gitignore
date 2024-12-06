@@ -114,3 +114,8 @@ dmypy.json
 .pyre/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# gurobi license file
+licenses/*
+!licenses/
+!licenses/.keep

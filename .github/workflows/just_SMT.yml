@@ -1,0 +1,44 @@
+# .github/workflows/just_SMT.yml
+
+name: Run SMT Solvers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t cdmo .
+        
+      - name: Create output directories
+        run: |
+          mkdir -p res
+          mkdir -p sys_info
+
+      - name: Capture and print system information
+        run: |
+          lscpu | tee sys_info/system_info.txt
+          free -h | tee -a sys_info/system_info.txt
+          echo "\nDisk Usage:" | tee -a sys_info/system_info.txt
+          df -h | tee -a sys_info/system_info.txt
+
+      - name: Run SMT solvers in Docker
+        run: |
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo python -u SMT/SMT_Z3.py instances/instances_dat res/SMT both
+
+      - name: Upload solver results
+        uses: actions/upload-artifact@v3
+        with:
+          name: solver-results
+          path: res/
+          retention-days: 30
+
+      - name: Upload system information
+        uses: actions/upload-artifact@v3
+        with:
+          name: system-information
+          path: sys_info/

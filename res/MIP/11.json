@@ -1,0 +1,20 @@
+{
+  "CBC": {
+    "time": 300,
+    "optimal": false,
+    "obj": "N/A",
+    "sol": []
+  },
+  "HiGHS": {
+    "time": 300,
+    "optimal": false,
+    "obj": "N/A",
+    "sol": []
+  },
+  "Gurobi": {
+    "time": 300,
+    "optimal": false,
+    "obj": "N/A",
+    "sol": []
+  }
+}

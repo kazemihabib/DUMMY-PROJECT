@@ -1,0 +1,55 @@
+name: Run MIP Solvers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 600  # Set timeout to 10 hours
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t cdmo .
+        
+      - name: Create output directories
+        run: |
+          mkdir -p res
+          mkdir -p sys_info
+
+      - name: Capture and print system information
+        run: |
+          lscpu | tee sys_info/system_info.txt
+          free -h | tee -a sys_info/system_info.txt
+          echo "\nDisk Usage:" | tee -a sys_info/system_info.txt
+          df -h | tee -a sys_info/system_info.txt
+
+      - name: Run MIP solvers in Docker
+        env:
+          GUROBI_LICENSE: ${{ secrets.GUROBI_LICENSE }}
+        run: |
+          docker run -v ${{ github.workspace }}/res:/app/res cdmo bash -c "
+            # Write the license file
+            echo \"$GUROBI_LICENSE\" > /app/licenses/gurobi.lic && \
+            # Verify the license
+            python -u MIP/check_gurobipy_license.py && \
+            # Execute additional commands if needed
+            python -u MIP/run.py instances/instances_dat res/MIP
+          "
+
+      # Ensure results are always uploaded, even if previous steps fail
+      - name: Upload solver results
+        if: always()  # Always execute this step
+        uses: actions/upload-artifact@v3
+        with:
+          name: solver-results
+          path: res/
+          retention-days: 30
+
+      - name: Upload system information
+        if: always()  # Always execute this step
+        uses: actions/upload-artifact@v3
+        with:
+          name: system-information
+          path: sys_info/

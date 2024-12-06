@@ -24,8 +24,8 @@ def parse_output_into_json(output_string):
     time_elapsed_match = re.search(r'% time elapsed: ([\d.]+) s', output_string)
     time_elapsed = int(float(time_elapsed_match.group(1))) if time_elapsed_match else None
 
-    solve_time_match = re.search(r'%%%mzn-stat: solveTime=([\d.]+)', output_string)
-    solve_time = float(solve_time_match.group(1)) if solve_time_match else None
+    # solve_time_match = re.search(r'%%%mzn-stat: solveTime=([\d.]+)', output_string)
+    # solve_time = float(solve_time_match.group(1)) if solve_time_match else None
 
     result = {
         "time": time_elapsed,
