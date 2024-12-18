@@ -1,0 +1,152 @@
+{
+    "gecode_CP_SYM_LB_RML_HRSTIC_GECODE": {
+        "optimal": true,
+        "obj": 322,
+        "sol": [
+            [
+                1,
+                2
+            ],
+            [
+                3,
+                4
+            ],
+            [
+                5
+            ],
+            [
+                6
+            ],
+            [
+                7
+            ],
+            [
+                8
+            ]
+        ],
+        "time": 0
+    },
+    "gecode_CP_SYM_LB": {
+        "optimal": true,
+        "obj": 322,
+        "sol": [
+            [
+                1,
+                2,
+                3
+            ],
+            [
+                4
+            ],
+            [
+                5
+            ],
+            [
+                6
+            ],
+            [
+                7
+            ],
+            [
+                8
+            ]
+        ],
+        "time": 3
+    },
+    "gecode_CP": {
+        "optimal": false,
+        "obj": 322,
+        "sol": [
+            [
+                1,
+                2,
+                3,
+                6
+            ],
+            [
+                4,
+                5,
+                7
+            ],
+            [
+                8
+            ]
+        ],
+        "time": 300
+    },
+    "chuffed_CP_SYM_LB_RML_HRSTIC_CHUFFED": {
+        "optimal": true,
+        "obj": 322,
+        "sol": [
+            [
+                5
+            ],
+            [
+                1,
+                8
+            ],
+            [
+                6,
+                2
+            ],
+            [
+                3
+            ],
+            [
+                7
+            ],
+            [
+                4
+            ]
+        ],
+        "time": 0
+    },
+    "chuffed_CP_SYM_LB": {
+        "optimal": true,
+        "obj": 322,
+        "sol": [
+            [
+                1,
+                2
+            ],
+            [
+                5
+            ],
+            [
+                3
+            ],
+            [
+                6
+            ],
+            [
+                4
+            ],
+            [
+                7,
+                8
+            ]
+        ],
+        "time": 1
+    },
+    "chuffed_CP": {
+        "optimal": true,
+        "obj": 322,
+        "sol": [
+            [
+                1,
+                2,
+                3,
+                6
+            ],
+            [
+                4,
+                5,
+                7
+            ],
+            [
+                8
+            ]
+        ],
+        "time": 6
+    }
+}
