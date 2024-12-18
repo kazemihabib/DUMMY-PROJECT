@@ -9,6 +9,8 @@ The goal of this project is to model and solve the MCP problem using three appro
 
 Each model applies different optimization techniques to allocate items fairly and efficiently to couriers. The project includes experiments to evaluate solver performance across multiple instances.
 
+You can access the complete project description [here](https://github.com/kazemihabib/DUMMY-PROJECT/blob/master/CDMO_Project-2023-2024.pdf).
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
